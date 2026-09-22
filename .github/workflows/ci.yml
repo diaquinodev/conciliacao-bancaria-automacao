@@ -1,0 +1,41 @@
+name: CI Pipeline - Integridade & Resiliência
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test:
+    name: Testes Automatizados & Data Contracts
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13"]
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Instalar Dependências
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: 1. Executar Testes Unitários do Extrator (Circuit Breaker & Backoff)
+        run: |
+          python -m unittest test_extrator_bancario.py -v
+
+      - name: 2. Executar Testes de Integridade de Dados & Dashboard (13 Testes)
+        run: |
+          python test_dashboard_integridade.py
+
+      - name: 3. Executar Testes de Resiliência e Armadilhas de Negócio (4 Testes)
+        run: |
+          python .agents/skills/analise-gargalos-conciliacao/scripts/test_gargalos_resiliencia.py

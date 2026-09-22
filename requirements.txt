@@ -1,0 +1,10 @@
+# Dependências da Esteira de Conciliação Bancária
+requests>=2.31.0
+pydantic>=2.0.0
+pandas>=2.0.0
+python-dotenv>=1.0.0
+certifi>=2023.7.22
+
+# Testes e Qualidade
+pytest>=7.4.0
+pytest-cov>=4.1.0

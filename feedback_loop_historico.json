@@ -1,0 +1,538 @@
+[
+  {
+    "timestamp": "2026-09-21T15:55:53.513737",
+    "correlation_id": "209dfc03-3367-4400-8a23-6b9aecd034bb",
+    "entrada": [
+      {
+        "id": "DISC_001",
+        "banco": "BRADESCO",
+        "conta": "12847-2",
+        "data_transacao": "2026-09-21 14:32:00",
+        "valor": 45000.0,
+        "descricao": "GOL LINHAS AEREAS - Fatura Centralizada 4410",
+        "motivo_detectado_sql": "Transação duplicada identificada pelo hash UK_EXTERNO"
+      },
+      {
+        "id": "DISC_002",
+        "banco": "ITAU",
+        "conta": "99999-9",
+        "data_transacao": "2026-09-21 09:15:22",
+        "valor": 120500.0,
+        "descricao": "CHARTER AEREO EXECUTIVO - Fretamento Internacional",
+        "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
+      },
+      {
+        "id": "DISC_003",
+        "banco": "BB",
+        "conta": "33401-8",
+        "data_transacao": "2026-09-20 16:45:10",
+        "valor": 89300.0,
+        "descricao": "COPAM HOTELARIA - Hospedagem Grupo Executivo",
+        "motivo_detectado_sql": "Valor estatisticamente superior a 2 desvios-padrão da média"
+      }
+    ],
+    "diagnostico_ia": {
+      "analises": [
+        {
+          "id": "DISC_001",
+          "motivo_provavel": "Transação idêntica detectada no BRADESCO. Provável re-tentativa após timeout de confirmação na API bancária.",
+          "confianca": 0.98,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Marcar transação excedente como 'Duplicata Confirmada' e estornar lançamento pendente no ERP.",
+          "precedentes_similares": "2 casos similares registrados no fechamento da última semana em dias de alta volumetria.",
+          "padrao_identificado": "Ocorrência comum em janelas de fechamento de lotes entre 14h e 16h."
+        },
+        {
+          "id": "DISC_002",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 120,500.00) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "DISC_003",
+          "motivo_provavel": "Variação estatística fora da média móvel histórica de 90 dias para a conta 33401-8 do BB.",
+          "confianca": 0.89,
+          "nivel_risco": "Baixo",
+          "acao_recomendada": "Classificar centro de custo e validar fatura unificada com o fornecedor de hospedagem/transfer.",
+          "precedentes_similares": "Variações cambiais em cartões corporativos no exterior ocorrem sazonalmente no fechamento mensal.",
+          "padrao_identificado": "Flutuação associada a fechamentos de faturas de viagens internacionais."
+        }
+      ],
+      "resumo_executivo": "Auditoria concluída para 3 discrepâncias. Risco geral moderado com 100% de ações mitigatórias definidas.",
+      "confianca_geral": 0.937
+    },
+    "status_auditoria": "Aguardando_Revisao_Humana"
+  },
+  {
+    "timestamp": "2026-09-21T16:05:27.425800",
+    "correlation_id": "DEMO-PROCESSO-2026",
+    "entrada": [
+      {
+        "id": "TX_INTER_CRITICO_015050",
+        "banco": "INTER",
+        "conta": "99999-9",
+        "data_transacao": "2026-09-21 16:05:25",
+        "valor": 134439.12,
+        "descricao": "CHARTER AEREO EXECUTIVO - Fretamento Internacional",
+        "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
+      },
+      {
+        "id": "TX_BB_723211BD_DUP",
+        "banco": "BB",
+        "conta": "41366-7",
+        "data_transacao": "2026-09-20 17:12:25",
+        "valor": 338.47,
+        "descricao": "TAXA BSP/IATA - Remissão de Bilhete Corporativo [LANCAMENTO REPETIDO]",
+        "motivo_detectado_sql": "Transação duplicada identificada pelo hash UK_EXTERNO"
+      }
+    ],
+    "diagnostico_ia": {
+      "analises": [
+        {
+          "id": "TX_INTER_CRITICO_015050",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 134,439.12) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "TX_BB_723211BD_DUP",
+          "motivo_provavel": "Transação idêntica detectada no BB. Provável re-tentativa após timeout de confirmação na API bancária.",
+          "confianca": 0.98,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Marcar transação excedente como 'Duplicata Confirmada' e estornar lançamento pendente no ERP.",
+          "precedentes_similares": "2 casos similares registrados no fechamento da última semana em dias de alta volumetria.",
+          "padrao_identificado": "Ocorrência comum em janelas de fechamento de lotes entre 14h e 16h."
+        }
+      ],
+      "resumo_executivo": "Auditoria concluída para 2 discrepâncias. Risco geral moderado com 100% de ações mitigatórias definidas.",
+      "confianca_geral": 0.96
+    },
+    "status_auditoria": "Aguardando_Revisao_Humana"
+  },
+  {
+    "timestamp": "2026-09-21T16:09:43.737803",
+    "correlation_id": "DEMO-PROCESSO-2026",
+    "entrada": [
+      {
+        "id": "TX_BRADESCO_CRITICO_9841FC",
+        "banco": "BRADESCO",
+        "conta": "99999-9",
+        "data_transacao": "2026-09-21 16:09:41",
+        "valor": 211094.02,
+        "descricao": "CHARTER AEREO EXECUTIVO - Fretamento Internacional",
+        "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
+      },
+      {
+        "id": "TX_ITAU_CRITICO_ABD419",
+        "banco": "ITAU",
+        "conta": "99999-9",
+        "data_transacao": "2026-09-21 16:09:41",
+        "valor": 123018.09,
+        "descricao": "CHARTER AEREO EXECUTIVO - Fretamento Internacional",
+        "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
+      },
+      {
+        "id": "TX_CAIXA_CRITICO_461B76",
+        "banco": "CAIXA",
+        "conta": "99999-9",
+        "data_transacao": "2026-09-21 16:09:41",
+        "valor": 159019.55,
+        "descricao": "CHARTER AEREO EXECUTIVO - Fretamento Internacional",
+        "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
+      },
+      {
+        "id": "TX_HSBC_CRITICO_73CF28",
+        "banco": "HSBC",
+        "conta": "99999-9",
+        "data_transacao": "2026-09-21 16:09:41",
+        "valor": 169132.42,
+        "descricao": "CHARTER AEREO EXECUTIVO - Fretamento Internacional",
+        "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
+      },
+      {
+        "id": "TX_BB_7698D08F_DUP",
+        "banco": "BB",
+        "conta": "39421-4",
+        "data_transacao": "2026-09-21 01:49:41",
+        "valor": 5384.93,
+        "descricao": "HOTEL COPACABANA PALACE - 3 Diárias [LANCAMENTO REPETIDO]",
+        "motivo_detectado_sql": "Transação duplicada identificada pelo hash UK_EXTERNO"
+      }
+    ],
+    "diagnostico_ia": {
+      "analises": [
+        {
+          "id": "TX_BRADESCO_CRITICO_9841FC",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 211,094.02) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "TX_ITAU_CRITICO_ABD419",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 123,018.09) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "TX_CAIXA_CRITICO_461B76",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 159,019.55) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "TX_HSBC_CRITICO_73CF28",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 169,132.42) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "TX_BB_7698D08F_DUP",
+          "motivo_provavel": "Transação idêntica detectada no BB. Provável re-tentativa após timeout de confirmação na API bancária.",
+          "confianca": 0.98,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Marcar transação excedente como 'Duplicata Confirmada' e estornar lançamento pendente no ERP.",
+          "precedentes_similares": "2 casos similares registrados no fechamento da última semana em dias de alta volumetria.",
+          "padrao_identificado": "Ocorrência comum em janelas de fechamento de lotes entre 14h e 16h."
+        }
+      ],
+      "resumo_executivo": "Auditoria concluída para 5 discrepâncias. Risco geral moderado com 100% de ações mitigatórias definidas.",
+      "confianca_geral": 0.948
+    },
+    "status_auditoria": "Aguardando_Revisao_Humana"
+  },
+  {
+    "timestamp": "2026-09-21T16:23:11.887605",
+    "correlation_id": "FECHAMENTO-DIARIO-2026",
+    "entrada": [
+      {
+        "id": "TX_BRADESCO_CRITICO_C2631F",
+        "banco": "BRADESCO",
+        "conta": "99999-9",
+        "data_transacao": "2026-09-21 16:23:09",
+        "valor": 137731.93,
+        "descricao": "CHARTER AEREO EXECUTIVO - Fretamento Internacional",
+        "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
+      },
+      {
+        "id": "TX_ITAU_CRITICO_98CA88",
+        "banco": "ITAU",
+        "conta": "99999-9",
+        "data_transacao": "2026-09-21 16:23:09",
+        "valor": 116046.47,
+        "descricao": "CHARTER AEREO EXECUTIVO - Fretamento Internacional",
+        "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
+      },
+      {
+        "id": "TX_CAIXA_CRITICO_345451",
+        "banco": "CAIXA",
+        "conta": "99999-9",
+        "data_transacao": "2026-09-21 16:23:09",
+        "valor": 164715.12,
+        "descricao": "CHARTER AEREO EXECUTIVO - Fretamento Internacional",
+        "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
+      },
+      {
+        "id": "TX_BB_A1C2510D_DUP",
+        "banco": "BB",
+        "conta": "11239-0",
+        "data_transacao": "2026-09-20 17:36:09",
+        "valor": 407.42,
+        "descricao": "LOCALIZA RENT A CAR - Locação Executiva [LANCAMENTO REPETIDO]",
+        "motivo_detectado_sql": "Transação duplicada identificada pelo hash UK_EXTERNO"
+      }
+    ],
+    "diagnostico_ia": {
+      "analises": [
+        {
+          "id": "TX_BRADESCO_CRITICO_C2631F",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 137,731.93) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "TX_ITAU_CRITICO_98CA88",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 116,046.47) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "TX_CAIXA_CRITICO_345451",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 164,715.12) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "TX_BB_A1C2510D_DUP",
+          "motivo_provavel": "Transação idêntica detectada no BB. Provável re-tentativa após timeout de confirmação na API bancária.",
+          "confianca": 0.98,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Marcar transação excedente como 'Duplicata Confirmada' e estornar lançamento pendente no ERP.",
+          "precedentes_similares": "2 casos similares registrados no fechamento da última semana em dias de alta volumetria.",
+          "padrao_identificado": "Ocorrência comum em janelas de fechamento de lotes entre 14h e 16h."
+        }
+      ],
+      "resumo_executivo": "Auditoria concluída para 4 discrepâncias. Risco geral moderado com 100% de ações mitigatórias definidas.",
+      "confianca_geral": 0.95
+    },
+    "status_auditoria": "Aguardando_Revisao_Humana"
+  },
+  {
+    "timestamp": "2026-09-21T16:26:39.743518",
+    "correlation_id": "FECHAMENTO-DIARIO-2026",
+    "entrada": [
+      {
+        "id": "TX_BRADESCO_CRITICO_E51683",
+        "banco": "BRADESCO",
+        "conta": "99999-9",
+        "data_transacao": "2026-09-21 16:26:38",
+        "valor": 239088.39,
+        "descricao": "CHARTER AEREO EXECUTIVO - Fretamento Internacional",
+        "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
+      },
+      {
+        "id": "TX_ITAU_CRITICO_AF46AF",
+        "banco": "ITAU",
+        "conta": "99999-9",
+        "data_transacao": "2026-09-21 16:26:38",
+        "valor": 169804.86,
+        "descricao": "CHARTER AEREO EXECUTIVO - Fretamento Internacional",
+        "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
+      },
+      {
+        "id": "TX_INTER_CRITICO_A12E8E",
+        "banco": "INTER",
+        "conta": "99999-9",
+        "data_transacao": "2026-09-21 16:26:38",
+        "valor": 156697.66,
+        "descricao": "CHARTER AEREO EXECUTIVO - Fretamento Internacional",
+        "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
+      },
+      {
+        "id": "TX_BB_41A438B7_DUP",
+        "banco": "BB",
+        "conta": "75436-3",
+        "data_transacao": "2026-09-21 02:29:38",
+        "valor": 666.75,
+        "descricao": "LOCALIZA RENT A CAR - Locação Executiva [LANCAMENTO REPETIDO]",
+        "motivo_detectado_sql": "Transação duplicada identificada pelo hash UK_EXTERNO"
+      }
+    ],
+    "diagnostico_ia": {
+      "analises": [
+        {
+          "id": "TX_BRADESCO_CRITICO_E51683",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 239,088.39) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "TX_ITAU_CRITICO_AF46AF",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 169,804.86) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "TX_INTER_CRITICO_A12E8E",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 156,697.66) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "TX_BB_41A438B7_DUP",
+          "motivo_provavel": "Transação idêntica detectada no BB. Provável re-tentativa após timeout de confirmação na API bancária.",
+          "confianca": 0.98,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Marcar transação excedente como 'Duplicata Confirmada' e estornar lançamento pendente no ERP.",
+          "precedentes_similares": "2 casos similares registrados no fechamento da última semana em dias de alta volumetria.",
+          "padrao_identificado": "Ocorrência comum em janelas de fechamento de lotes entre 14h e 16h."
+        }
+      ],
+      "resumo_executivo": "Auditoria concluída para 4 discrepâncias. Risco geral moderado com 100% de ações mitigatórias definidas.",
+      "confianca_geral": 0.95
+    },
+    "status_auditoria": "Aguardando_Revisao_Humana"
+  },
+  {
+    "timestamp": "2026-09-21T17:15:32.390615",
+    "correlation_id": "488aa6e1-bbf8-4e16-9415-8908b7605a7d",
+    "entrada": [
+      {
+        "id": "DISC-001",
+        "banco": "ITAU",
+        "conta": "12345-6",
+        "data_transacao": "2026-09-21",
+        "valor": 850000.0,
+        "descricao": "FATURA BSP IATA CONSOLIDADO 400 E-TICKETS",
+        "motivo_detectado_sql": "DIVERGENCIA_AGRUPADOR_LOTE"
+      },
+      {
+        "id": "DISC-002",
+        "banco": "BRADESCO",
+        "conta": "98765-4",
+        "data_transacao": "2026-09-21",
+        "valor": 320.0,
+        "descricao": "HOTEL WINDSOR NO-SHOW RETENCAO 1 DIARIA",
+        "motivo_detectado_sql": "duplicada_cancelamento_parcial"
+      }
+    ],
+    "diagnostico_ia": {
+      "analises": [
+        {
+          "id": "DISC-001",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 850,000.00) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Alto",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "DISC-002",
+          "motivo_provavel": "Transação idêntica detectada no BRADESCO. Provável re-tentativa após timeout de confirmação na API bancária.",
+          "confianca": 0.98,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Marcar transação excedente como 'Duplicata Confirmada' e estornar lançamento pendente no ERP.",
+          "precedentes_similares": "2 casos similares registrados no fechamento da última semana em dias de alta volumetria.",
+          "padrao_identificado": "Ocorrência comum em janelas de fechamento de lotes entre 14h e 16h."
+        }
+      ],
+      "resumo_executivo": "Auditoria concluída para 2 discrepâncias. Risco geral moderado com 100% de ações mitigatórias definidas.",
+      "confianca_geral": 0.96
+    },
+    "status_auditoria": "Aguardando_Revisao_Humana"
+  },
+  {
+    "timestamp": "2026-09-21T17:20:42.450499",
+    "correlation_id": "c6096be1-c985-43bb-839f-1d896502d0c1",
+    "entrada": [
+      {
+        "id": "DISC-001",
+        "banco": "ITAU",
+        "conta": "12345-6",
+        "data_transacao": "2026-09-21",
+        "valor": 850000.0,
+        "descricao": "FATURA BSP IATA CONSOLIDADO 400 E-TICKETS",
+        "motivo_detectado_sql": "DIVERGENCIA_AGRUPADOR_LOTE"
+      },
+      {
+        "id": "DISC-002",
+        "banco": "BRADESCO",
+        "conta": "98765-4",
+        "data_transacao": "2026-09-21",
+        "valor": 320.0,
+        "descricao": "HOTEL WINDSOR NO-SHOW RETENCAO 1 DIARIA",
+        "motivo_detectado_sql": "duplicada_cancelamento_parcial"
+      }
+    ],
+    "diagnostico_ia": {
+      "analises": [
+        {
+          "id": "DISC-001",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 850,000.00) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Alto",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "DISC-002",
+          "motivo_provavel": "Transação idêntica detectada no BRADESCO. Provável re-tentativa após timeout de confirmação na API bancária.",
+          "confianca": 0.98,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Marcar transação excedente como 'Duplicata Confirmada' e estornar lançamento pendente no ERP.",
+          "precedentes_similares": "2 casos similares registrados no fechamento da última semana em dias de alta volumetria.",
+          "padrao_identificado": "Ocorrência comum em janelas de fechamento de lotes entre 14h e 16h."
+        }
+      ],
+      "resumo_executivo": "Auditoria concluída para 2 discrepâncias. Risco geral moderado com 100% de ações mitigatórias definidas.",
+      "confianca_geral": 0.96
+    },
+    "status_auditoria": "Aguardando_Revisao_Humana"
+  },
+  {
+    "timestamp": "2026-09-22T18:08:23.498459",
+    "correlation_id": "81f894ab-f05c-446b-9bde-a1961bb7cf33",
+    "entrada": [
+      {
+        "id": "DISC-001",
+        "banco": "ITAU",
+        "conta": "12345-6",
+        "data_transacao": "2026-09-21",
+        "valor": 850000.0,
+        "descricao": "FATURA BSP IATA CONSOLIDADO 400 E-TICKETS",
+        "motivo_detectado_sql": "DIVERGENCIA_AGRUPADOR_LOTE"
+      },
+      {
+        "id": "DISC-002",
+        "banco": "BRADESCO",
+        "conta": "98765-4",
+        "data_transacao": "2026-09-21",
+        "valor": 320.0,
+        "descricao": "HOTEL WINDSOR NO-SHOW RETENCAO 1 DIARIA",
+        "motivo_detectado_sql": "duplicada_cancelamento_parcial"
+      }
+    ],
+    "diagnostico_ia": {
+      "analises": [
+        {
+          "id": "DISC-001",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 850,000.00) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Alto",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "DISC-002",
+          "motivo_provavel": "Transação idêntica detectada no BRADESCO. Provável re-tentativa após timeout de confirmação na API bancária.",
+          "confianca": 0.98,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Marcar transação excedente como 'Duplicata Confirmada' e estornar lançamento pendente no ERP.",
+          "precedentes_similares": "2 casos similares registrados no fechamento da última semana em dias de alta volumetria.",
+          "padrao_identificado": "Ocorrência comum em janelas de fechamento de lotes entre 14h e 16h."
+        }
+      ],
+      "resumo_executivo": "Auditoria concluída para 2 discrepâncias. Risco geral moderado com 100% de ações mitigatórias definidas.",
+      "confianca_geral": 0.96
+    },
+    "status_auditoria": "Aguardando_Revisao_Humana"
+  }
+]

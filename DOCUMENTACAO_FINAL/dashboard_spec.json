@@ -1,0 +1,131 @@
+{
+  "$schema": "https://powerbi.microsoft.com/schemas/report-layout-spec.json",
+  "reportTitle": "DASHBOARD EXECUTIVO: CONCILIAÇÃO BANCÁRIA & FLUXO DE CAIXA",
+  "companyContext": "Viagens Corporativas - Fechamento Diário de Tesouraria",
+  "refreshSchedule": "Diário às 07:15 AM (Pós-Orquestração Power Automate)",
+  "datasetModel": {
+    "architecture": "Star Schema (Modelo Estrela)",
+    "factTable": "FATO_CONCILIACAO_BANCARIA",
+    "dimensionTables": [
+      "DIM_BANCO",
+      "DIM_CALENDARIO",
+      "DIM_CATEGORIA_DESPESA",
+      "DIM_STATUS_CONCILIACAO"
+    ]
+  },
+  "kpis": [
+    {
+      "id": "kpi_total_processado",
+      "title": "VOLUME TOTAL PROCESSADO",
+      "daxExpression": "VolumeTotalProcessado = SUM(FATO_CONCILIACAO_BANCARIA[VALOR])",
+      "format": "R$ #,##0.00",
+      "targetValue": "R$ 4.892.543,20",
+      "trend": "+12% vs semana anterior",
+      "statusColor": "#107c41"
+    },
+    {
+      "id": "kpi_discrepancias_detectadas",
+      "title": "DISCREPÂNCIAS IDENTIFICADAS",
+      "daxExpression": "QtdDiscrepancias = CALCULATE(COUNTROWS(FATO_CONCILIACAO_BANCARIA), FATO_CONCILIACAO_BANCARIA[FLAG_DISCREPANCIA] = 1)",
+      "format": "0",
+      "targetValue": "3 Alertas",
+      "trend": "-2 alertas vs dia anterior",
+      "statusColor": "#d83b01"
+    },
+    {
+      "id": "kpi_taxa_acuracia",
+      "title": "TAXA DE ACURÁCIA OPERACIONAL",
+      "daxExpression": "TaxaAcuracia = DIVIDE(CALCULATE(COUNTROWS(FATO_CONCILIACAO_BANCARIA), FATO_CONCILIACAO_BANCARIA[FLAG_DISCREPANCIA] = 0), COUNTROWS(FATO_CONCILIACAO_BANCARIA), 0) * 100",
+      "format": "0.00'%'",
+      "targetValue": "99,94%",
+      "trend": "+0.5% de melhoria com IA",
+      "statusColor": "#0078d4"
+    },
+    {
+      "id": "kpi_tempo_medio_fechamento",
+      "title": "TEMPO DE FECHAMENTO MATINAL",
+      "daxExpression": "TempoFechamentoMinutos = AVERAGE(FATO_AUDITORIA[DURACAO_MINUTOS])",
+      "format": "0' min'",
+      "targetValue": "15 min",
+      "trend": "94% de redução (de 4h para 15min)",
+      "statusColor": "#107c41"
+    }
+  ],
+  "visualizations": [
+    {
+      "id": "vis_volume_por_banco",
+      "type": "ClusteredBarChart",
+      "title": "Volume Financeiro Conciliado por Banco (8 Contas)",
+      "xAxis": "DIM_BANCO[NOME_BANCO]",
+      "yAxis": "[VolumeTotalProcessado]",
+      "dataSeries": [
+        { "banco": "Banco do Brasil", "valor": 1245320.00, "pct": "25.4%" },
+        { "banco": "Bradesco", "valor": 1089540.00, "pct": "22.3%" },
+        { "banco": "Itaú", "valor": 892340.00, "pct": "18.2%" },
+        { "banco": "Santander", "valor": 665343.20, "pct": "13.6%" },
+        { "banco": "Caixa Econômica", "valor": 412000.00, "pct": "8.4%" },
+        { "banco": "HSBC", "valor": 288000.00, "pct": "5.9%" },
+        { "banco": "Sicredi", "valor": 180000.00, "pct": "3.7%" },
+        { "banco": "Banco Inter", "valor": 120000.00, "pct": "2.5%" }
+      ]
+    },
+    {
+      "id": "vis_evolucao_temporal",
+      "type": "AreaLineChart",
+      "title": "Evolução Temporal do Fluxo de Conciliação (Últimos 30 Dias)",
+      "xAxis": "DIM_CALENDARIO[DATA]",
+      "yAxis": "[VolumeTotalProcessado]",
+      "secondaryYAxis": "[QtdDiscrepancias]"
+    },
+    {
+      "id": "vis_categorias_despesa",
+      "type": "DonutChart",
+      "title": "Distribuição de Despesas de Viagens Corporativas",
+      "legend": "DIM_CATEGORIA_DESPESA[CATEGORIA]",
+      "values": "[VolumeTotalProcessado]",
+      "breakdown": [
+        { "categoria": "Passagens Aéreas", "percentual": 42.0 },
+        { "categoria": "Hospedagem", "percentual": 31.0 },
+        { "categoria": "Transfers e Locação", "percentual": 18.0 },
+        { "categoria": "Seguros Viagem", "percentual": 6.0 },
+        { "categoria": "Taxas BSP/Outros", "percentual": 3.0 }
+      ]
+    },
+    {
+      "id": "vis_tabela_discrepancias_ativas",
+      "type": "InteractiveTable",
+      "title": "Últimas Discrepâncias com Diagnóstico da Inteligência Artificial",
+      "columns": [
+        "FATO_CONCILIACAO_BANCARIA[ID_EXTERNO]",
+        "DIM_BANCO[NOME_BANCO]",
+        "FATO_CONCILIACAO_BANCARIA[DATA_TRANSACAO]",
+        "FATO_CONCILIACAO_BANCARIA[VALOR]",
+        "FATO_CONCILIACAO_BANCARIA[MOTIVO_DISCREPANCIA]",
+        "FATO_CONCILIACAO_BANCARIA[IA_NIVEL_RISCO]",
+        "FATO_CONCILIACAO_BANCARIA[IA_ACAO_RECOMENDADA]"
+      ],
+      "conditionalFormatting": {
+        "IA_NIVEL_RISCO": {
+          "Alto": "#ffcdd2",
+          "Médio": "#fff9c4",
+          "Baixo": "#c8e6c9"
+        }
+      }
+    }
+  ],
+  "telemetrySchema": {
+    "targetLog": "Azure_Log_Analytics_Orchestration",
+    "samplePayload": {
+      "timestamp": "2026-09-21T15:14:00-03:00",
+      "correlation_id": "7f8b9e12-45a1-4bc3-90d2-abcdef123456",
+      "evento": "extracao_concluida",
+      "duracao_ms": 1250,
+      "bancos_processados": 8,
+      "registros": 1543,
+      "erros": 0,
+      "alertas": 3,
+      "confianca_ia": 0.95,
+      "sla_compliance": true
+    }
+  }
+}

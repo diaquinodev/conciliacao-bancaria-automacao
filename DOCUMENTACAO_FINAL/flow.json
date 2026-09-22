@@ -1,0 +1,272 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "$connections": {
+      "defaultValue": {},
+      "type": "Object"
+    },
+    "SqlServer_ConnectionString": {
+      "defaultValue": "Server=tcp:sql-viagens-corp.database.windows.net,1433;Initial Catalog=CONCILIACAO_BANCARIA;",
+      "type": "SecureString"
+    },
+    "CFO_Email": {
+      "defaultValue": "diaquinotech@gmail.com",
+      "type": "String"
+    },
+    "Claude_Model": {
+      "defaultValue": "claude-3-5-sonnet-20241022",
+      "type": "String"
+    }
+  },
+  "triggers": {
+    "Recurrence_Diaria_0700_AM": {
+      "type": "Recurrence",
+      "recurrence": {
+        "frequency": "Day",
+        "interval": 1,
+        "schedule": {
+          "hours": [ "7" ],
+          "minutes": [ 0 ]
+        },
+        "timeZone": "E. South America Standard Time"
+      },
+      "metadata": {
+        "description": "Disparo diário pontualmente às 07:00 AM (Horário de Brasília) para conciliação antes da abertura dos mercados."
+      }
+    }
+  },
+  "actions": {
+    "1_Executar_Script_Python_Extracao": {
+      "type": "ExecutePowerShellScript",
+      "inputs": {
+        "script": "python C:\\automacao\\conciliacao\\extrator_bancario.py --dias 1",
+        "workingDirectory": "C:\\automacao\\conciliacao",
+        "timeout": "PT5M"
+      },
+      "retryPolicy": {
+        "type": "exponential",
+        "count": 3,
+        "interval": "PT30S",
+        "minimumInterval": "PT10S",
+        "maximumInterval": "PT2M"
+      },
+      "description": "Dispara o ExtratorBancario em Python com Circuit Breaker e OAuth para os 8 bancos corporativos."
+    },
+    "2_Carregar_Power_Query_Transformacao": {
+      "runAfter": {
+        "1_Executar_Script_Python_Extracao": [ "Succeeded" ]
+      },
+      "type": "ExecuteDataflow",
+      "inputs": {
+        "dataflowId": "df-conciliacao-viagens-clean-transform",
+        "workspaceId": "ws-viagens-corp-production",
+        "notifyOption": "MailOnFailure"
+      },
+      "retryPolicy": {
+        "type": "fixed",
+        "count": 2,
+        "interval": "PT1M"
+      },
+      "description": "Executa o pipeline M do Power Query para deduplicação, tipagem e categorização das despesas de viagem."
+    },
+    "3_Executar_SQL_Validacao": {
+      "runAfter": {
+        "2_Carregar_Power_Query_Transformacao": [ "Succeeded" ]
+      },
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_sql",
+          "operationId": "ExecuteProcedure_V2"
+        },
+        "parameters": {
+          "procedureName": "SP_DETECTAR_DISCREPANCIAS",
+          "parameters": {
+            "DIAS_ATRAS": 1
+          }
+        }
+      },
+      "retryPolicy": {
+        "type": "exponential",
+        "count": 3,
+        "interval": "PT15S"
+      },
+      "description": "Executa Stored Procedure de detecção de duplicatas, desvios padrão históricos e limites de alçada (> R$ 100k)."
+    },
+    "4_Obter_Discrepancias_SQL": {
+      "runAfter": {
+        "3_Executar_SQL_Validacao": [ "Succeeded" ]
+      },
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_sql",
+          "operationId": "ExecuteSqlQuery"
+        },
+        "parameters": {
+          "query": "SELECT ID_TRANSACAO, BANCO, CONTA, DATA_TRANSACAO, VALOR, DESCRICAO, MOTIVO_DISCREPANCIA FROM TB_CONCILIACAO_BANCARIA WHERE FLAG_DISCREPANCIA = 1 AND CAST(DATA_PROCESSAMENTO AS DATE) = CAST(GETDATE() AS DATE) FOR JSON AUTO;"
+        }
+      },
+      "description": "Recupera todas as discrepâncias pendentes do dia em formato JSON estruturado para análise da IA."
+    },
+    "5_Analisar_com_IA_Claude": {
+      "runAfter": {
+        "4_Obter_Discrepancias_SQL": [ "Succeeded" ]
+      },
+      "type": "Http",
+      "inputs": {
+        "method": "POST",
+        "uri": "https://api.anthropic.com/v1/messages",
+        "headers": {
+          "x-api-key": "@parameters('Claude_ApiKey')",
+          "anthropic-version": "2023-06-01",
+          "content-type": "application/json"
+        },
+        "body": {
+          "model": "@parameters('Claude_Model')",
+          "max_tokens": 2048,
+          "system": "Você é o auditor sênior de conformidade financeira de uma empresa de viagens corporativas. Analise as discrepâncias bancárias e responda exclusivamente em JSON estrito.",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Analise as seguintes discrepâncias bancárias corporativas e retorne motivo provável, nível de risco (Baixo, Médio, Alto), ação recomendada, precedentes e padrão identificado:\n\n@{body('4_Obter_Discrepancias_SQL')?['ResultSets']?['Table1']}"
+            }
+          ]
+        },
+        "timeout": "PT45S"
+      },
+      "retryPolicy": {
+        "type": "exponential",
+        "count": 3,
+        "interval": "PT10S"
+      },
+      "description": "Consome a API do Claude para gerar diagnósticos, níveis de risco e ações recomendadas sobre as anomalias."
+    },
+    "6_Condicao_Discrepancias": {
+      "runAfter": {
+        "5_Analisar_com_IA_Claude": [ "Succeeded" ]
+      },
+      "type": "If",
+      "expression": {
+        "greater": [
+          "@length(body('4_Obter_Discrepancias_SQL')?['ResultSets']?['Table1'])",
+          0
+        ]
+      },
+      "actions": {
+        "6.1_Enviar_Alertas_Criticos_CFO": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_office365",
+              "operationId": "SendEmailV2"
+            },
+            "parameters": {
+              "emailMessage": {
+                "To": "@parameters('CFO_Email')",
+                "Subject": "⚠️ [ALERTA DE CONCILIAÇÃO BANCÁRIA] Discrepâncias Detectadas - @{utcNow('dd/MM/yyyy')}",
+                "Body": "<h2>Relatório de Anomalias de Conciliação Bancária</h2><p>Foram identificadas <strong>@{length(body('4_Obter_Discrepancias_SQL')?['ResultSets']?['Table1'])}</strong> discrepâncias no fechamento matinal.</p><h3>Diagnóstico da Inteligência Artificial:</h3><div style='background-color:#f9f9f9; padding:15px; border-left:4px solid #d9534f;'><pre>@{body('5_Analisar_com_IA_Claude')?['content']?[0]?['text']}</pre></div><p>Acesse o Dashboard no Power BI para aprovação e tratativas.</p>",
+                "Importance": "High"
+              }
+            }
+          }
+        },
+        "6.2_Notificar_Canal_Teams": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_teams",
+              "operationId": "PostMessageToConversation"
+            },
+            "parameters": {
+              "groupId": "teams-channel-financeiro-viagens",
+              "message": "🚨 <b>Atenção Equipe Financeira:</b> Foram detectadas discrepâncias no fechamento bancário de hoje. Alerta executivo enviado à Diretoria."
+            }
+          }
+        }
+      },
+      "else": {
+        "actions": {
+          "6.3_Log_Conciliacao_100_Sucesso": {
+            "type": "Compose",
+            "inputs": "Conciliação bancária 100% perfeita. Nenhuma discrepância encontrada."
+          }
+        }
+      },
+      "description": "Verifica se o total de discrepâncias é superior a 0 e despacha notificações de alta prioridade."
+    },
+    "7_Atualizar_PowerBI_Dataset": {
+      "runAfter": {
+        "6_Condicao_Discrepancias": [ "Succeeded" ]
+      },
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_powerbi",
+          "operationId": "RefreshDataset"
+        },
+        "parameters": {
+          "groupId": "workspace-viagens-corporativas-id",
+          "datasetId": "dataset-conciliacao-bancaria-id"
+        }
+      },
+      "retryPolicy": {
+        "type": "exponential",
+        "count": 3,
+        "interval": "PT30S"
+      },
+      "description": "Atualiza o dataset corporativo no Power BI Service para exibição imediata no Dashboard Executivo."
+    },
+    "8_Exportar_Relatorio_PDF": {
+      "runAfter": {
+        "7_Atualizar_PowerBI_Dataset": [ "Succeeded" ]
+      },
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_powerbi",
+          "operationId": "ExportToFileInGroup"
+        },
+        "parameters": {
+          "groupId": "workspace-viagens-corporativas-id",
+          "reportId": "report-conciliacao-executiva-id",
+          "format": "PDF"
+        }
+      },
+      "description": "Renderiza o relatório analítico executivo em formato PDF para distribuição à Diretoria."
+    },
+    "9_Log_Execucao_Centralizado": {
+      "runAfter": {
+        "8_Exportar_Relatorio_PDF": [ "Succeeded", "Failed" ]
+      },
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_azureloganalytics",
+          "operationId": "PostLog"
+        },
+        "parameters": {
+          "logName": "ConciliacaoBancaria_Log",
+          "rawBody": {
+            "workflow_name": "Automação Conciliação Bancária",
+            "timestamp": "@{utcNow()}",
+            "status_geral": "@{workflow()?['run']?['status']}",
+            "execution_id": "@{workflow()?['run']?['name']}",
+            "bancos_processados": 8,
+            "discrepancias_count": "@length(body('4_Obter_Discrepancias_SQL')?['ResultSets']?['Table1'])"
+          }
+        }
+      },
+      "description": "Persiste evento de telemetria e auditoria no Azure Log Analytics para monitoramento de SLA e observabilidade."
+    }
+  },
+  "error_handling": {
+    "circuit_breaker": {
+      "enabled": true,
+      "failure_threshold": 3,
+      "cooldown_period": "PT5M"
+    },
+    "global_timeout": "PT30M"
+  }
+}
