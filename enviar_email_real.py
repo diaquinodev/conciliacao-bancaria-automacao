@@ -7,8 +7,11 @@ Autor: Diego Luiz Lino de Aquino (diaquinotech@gmail.com)
 Data: 2026-09-21
 """
 
+import html
+import json
 import os
 import sys
+from collections import defaultdict
 import smtplib
 import requests
 from email.mime.multipart import MIMEMultipart
@@ -29,6 +32,34 @@ SMTP_EMAIL = os.getenv("SMTP_EMAIL", "diaquinotech@gmail.com")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
 API_CAMBIO_URL = os.getenv("API_CAMBIO_URL", "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL")
 API_BACEN_SELIC_URL = os.getenv("API_BACEN_SELIC_URL", "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados/ultimos/1?formato=json")
+TRANSACOES_PATH = "transacoes_brutas.json"
+TETO_ALCADA = 100000.00  # Mesma regra da SP_DETECTAR_DISCREPANCIAS
+NOMES_BANCOS = {
+    "BB": "Banco do Brasil", "BRADESCO": "Bradesco Corporate", "ITAU": "Itaú BBA",
+    "SANTANDER": "Santander Empresas", "CAIXA": "Caixa Econômica", "HSBC": "HSBC",
+    "SICREDI": "Sicredi", "INTER": "Banco Inter",
+}
+
+
+def formatar_brl(valor):
+    """Formata número no padrão monetário brasileiro (R$ 1.234,56)."""
+    return "R$ " + f"{valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def resumir_conciliacao(caminho=TRANSACOES_PATH):
+    """Consolida lançamentos e discrepâncias por banco a partir da extração real."""
+    with open(caminho, "r", encoding="utf-8") as f:
+        transacoes = json.load(f)
+
+    resumo = defaultdict(lambda: {"qtd": 0, "total": 0.0, "discrepancias": 0})
+    for t in transacoes:
+        valor = float(t.get("valor", 0.0))
+        banco = str(t.get("banco", "DESCONHECIDO")).upper()
+        resumo[banco]["qtd"] += 1
+        resumo[banco]["total"] += valor
+        if valor > TETO_ALCADA:
+            resumo[banco]["discrepancias"] += 1
+    return dict(sorted(resumo.items(), key=lambda item: item[1]["total"], reverse=True))
 
 
 def extrair_dados_api_publica():
@@ -82,8 +113,32 @@ def extrair_dados_api_publica():
     return dados_mercado
 
 
-def gerar_relatorio_html(dados_mercado):
+def gerar_relatorio_html(dados_mercado, resumo_bancos):
     """Gera o template HTML corporativo com dados reais e formatação executiva."""
+    total_qtd = sum(b["qtd"] for b in resumo_bancos.values())
+    total_valor = sum(b["total"] for b in resumo_bancos.values())
+    total_disc = sum(b["discrepancias"] for b in resumo_bancos.values())
+    acuracia = ((total_qtd - total_disc) / total_qtd * 100) if total_qtd else 100.0
+
+    linhas_bancos = ""
+    for banco, b in resumo_bancos.items():
+        if b["discrepancias"]:
+            status = f'<span class="badge-warning">{b["discrepancias"]} acima do teto</span>'
+        else:
+            status = '<span class="badge-success">Conciliado 100%</span>'
+        linhas_bancos += f"""
+              <tr>
+                <td>{html.escape(NOMES_BANCOS.get(banco, banco))}</td>
+                <td>{b["qtd"]}</td>
+                <td>{formatar_brl(b["total"])}</td>
+                <td>{status}</td>
+              </tr>"""
+
+    if total_disc:
+        parecer = (f"Foram identificados {total_disc} lançamento(s) acima do teto de alçada de "
+                   f"{formatar_brl(TETO_ALCADA)}, encaminhados para aprovação da diretoria financeira.")
+    else:
+        parecer = "Nenhum lançamento excedeu o teto de alçada da tesouraria."
     html_content = f"""
     <!DOCTYPE html>
     <html lang="pt-BR">
@@ -165,55 +220,19 @@ def gerar_relatorio_html(dados_mercado):
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Banco do Brasil</td>
-                <td>24</td>
-                <td>R$ 142.850,00</td>
-                <td><span class="badge-success">Conciliado 100%</span></td>
-              </tr>
-              <tr>
-                <td>Bradesco Corporate</td>
-                <td>31</td>
-                <td>R$ 215.420,50</td>
-                <td><span class="badge-warning">1 Regularização</span></td>
-              </tr>
-              <tr>
-                <td>Itaú BBA</td>
-                <td>28</td>
-                <td>R$ 198.300,10</td>
-                <td><span class="badge-warning">1 Tolerância</span></td>
-              </tr>
-              <tr>
-                <td>Santander Empresas</td>
-                <td>19</td>
-                <td>R$ 94.610,00</td>
-                <td><span class="badge-success">Conciliado 100%</span></td>
-              </tr>
-              <tr>
-                <td>Caixa Econômica</td>
-                <td>16</td>
-                <td>R$ 82.140,00</td>
-                <td><span class="badge-success">Conciliado 100%</span></td>
-              </tr>
-              <tr>
-                <td>Demais Bancos (Inter, Sicredi, HSBC)</td>
-                <td>45</td>
-                <td>R$ 188.446,03</td>
-                <td><span class="badge-success">Conciliado 100%</span></td>
-              </tr>
+            <tbody>{linhas_bancos}
               <tr style="font-weight: bold; background-color: #f8fafc;">
                 <td>TOTAL CONSOLIDADO</td>
-                <td>163 Lançamentos</td>
-                <td>R$ 921.766,63</td>
-                <td><span class="badge-success">99,94% Acurácia</span></td>
+                <td>{total_qtd} Lançamentos</td>
+                <td>{formatar_brl(total_valor)}</td>
+                <td><span class="badge-success">{acuracia:.2f}% Conformidade</span></td>
               </tr>
             </tbody>
           </table>
 
           <div class="section-title">3. Parecer da Auditoria Contábil</div>
           <p style="font-size: 13px; line-height: 1.6; color: #334155;">
-            A conciliação multibancária foi concluída com êxito às {dados_mercado['data_consulta'].split(' ')[1]}. Foram identificadas apenas 2 inconsistências operacionais menores (diferença de centavos por IOF em cartão corporativo no exterior e faturamento consolidado de lote aéreo IATA), ambas com planos de mitigação e classificação automática.
+            A conciliação multibancária foi concluída às {dados_mercado['data_consulta'].split(' ')[1]}. {parecer}
           </p>
         </div>
 
@@ -246,7 +265,7 @@ def enviar_email(dados_mercado):
     msg["To"] = destinatario
     msg["X-Priority"] = "1"  # Alta prioridade
 
-    corpo_html = gerar_relatorio_html(dados_mercado)
+    corpo_html = gerar_relatorio_html(dados_mercado, resumir_conciliacao())
     msg.attach(MIMEText(corpo_html, "html", "utf-8"))
 
     print(f">> [ETAPA 3/3] Autenticando e Transmitindo E-mail para: {destinatario}...")

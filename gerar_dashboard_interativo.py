@@ -30,7 +30,14 @@ def compilar_dashboard():
         bancos_map[banco]["qtd"] += 1
         bancos_map[banco]["total"] += val
 
-    transacoes_js = json.dumps(transacoes, ensure_ascii=False)
+    # Escapa "<", ">" e "&" para que uma descrição vinda do banco não consiga
+    # fechar a tag <script> e injetar HTML no painel (XSS armazenado).
+    transacoes_js = (
+        json.dumps(transacoes, ensure_ascii=False)
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+        .replace("&", "\\u0026")
+    )
 
     html = f"""<!DOCTYPE html>
 <html lang="pt-BR">
@@ -41,7 +48,7 @@ def compilar_dashboard():
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <style>
     :root {{
       --bg-primary: #0b1320;
@@ -83,6 +90,10 @@ def compilar_dashboard():
       background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3);
       color: #34d399; border-radius: 6px; font-size: 12px; font-weight: 600;
     }}
+    .badge-status.alerta {{
+      background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.35); color: #fca5a5;
+    }}
+    .badge-status.alerta::before {{ background: #ef4444; box-shadow: 0 0 8px #ef4444; }}
     .badge-status::before {{
       content: ''; width: 8px; height: 8px; background: #10b981; border-radius: 50%;
       box-shadow: 0 0 8px #10b981;
@@ -224,7 +235,7 @@ def compilar_dashboard():
           <p>Esteira Automatizada de Tesouraria Multibancária &bull; Viagens Corporativas</p>
         </div>
       </div>
-      <div class="badge-status">Operação 100% Conciliada (STP 99,8%)</div>
+      <div class="badge-status" id="badge-status">Conciliação em andamento</div>
     </header>
 
     <!-- BARRA DE FILTROS INTERATIVA -->
@@ -389,6 +400,21 @@ def compilar_dashboard():
     let chartCategoriasInstance = null;
     let chartBancosInstance = null;
 
+    // Teto de alçada da tesouraria (mesma regra da SP_DETECTAR_DISCREPANCIAS)
+    const TETO_ALCADA = 100000;
+
+    function escaparHtml(valor) {{
+      return String(valor ?? "").replace(/[&<>"']/g, c => ({{
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }}[c]));
+    }}
+
+    function statusConciliacao(t) {{
+      return Number(t.valor) > TETO_ALCADA
+        ? '<span style="color: #f87171; font-weight: 600; font-size: 11px;">● Discrepância</span>'
+        : '<span style="color: #34d399; font-weight: 600; font-size: 11px;">● Conciliado</span>';
+    }}
+
     function formatarMoeda(val) {{
       return "R$ " + Number(val).toLocaleString("pt-BR", {{ minimumFractionDigits: 2, maximumFractionDigits: 2 }});
     }}
@@ -435,6 +461,13 @@ def compilar_dashboard():
         }}
       }});
 
+      const qtdDiscrepancias = dadosFiltrados.filter(t => Number(t.valor) > TETO_ALCADA).length;
+      const badge = document.getElementById("badge-status");
+      badge.textContent = qtdDiscrepancias === 0
+        ? "Operação 100% Conciliada"
+        : `${{qtdDiscrepancias}} lançamento(s) acima do teto aguardando aprovação`;
+      badge.classList.toggle("alerta", qtdDiscrepancias > 0);
+
       document.getElementById("kpi-total-gasto").textContent = formatarMoeda(total);
       document.getElementById("kpi-qtd-transacoes").textContent = qtd;
       document.getElementById("kpi-ticket-medio").textContent = formatarMoeda(medio);
@@ -456,13 +489,13 @@ def compilar_dashboard():
         paginaDados.forEach(t => {{
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td><span class="badge-bank">${{t.banco}}</span></td>
-            <td>${{t.data_transacao ? t.data_transacao.substring(0, 16) : "N/D"}}</td>
-            <td><span class="badge-cat">${{t.categoria_sugerida || "Geral"}}</span></td>
-            <td><strong>${{t.descricao}}</strong></td>
-            <td style="color: var(--text-muted);">${{t.conta}}</td>
+            <td><span class="badge-bank">${{escaparHtml(t.banco)}}</span></td>
+            <td>${{t.data_transacao ? escaparHtml(t.data_transacao.substring(0, 16)) : "N/D"}}</td>
+            <td><span class="badge-cat">${{escaparHtml(t.categoria_sugerida || "Geral")}}</span></td>
+            <td><strong>${{escaparHtml(t.descricao)}}</strong></td>
+            <td style="color: var(--text-muted);">${{escaparHtml(t.conta)}}</td>
             <td style="text-align: right;" class="badge-debito">${{formatarMoeda(t.valor)}}</td>
-            <td style="text-align: center;"><span style="color: #34d399; font-weight: 600; font-size: 11px;">● Conciliado</span></td>
+            <td style="text-align: center;">${{statusConciliacao(t)}}</td>
           `;
           tbody.appendChild(tr);
         }});
@@ -597,9 +630,6 @@ def compilar_dashboard():
 """
 
     with open("dashboard_demonstracao.html", "w", encoding="utf-8") as f:
-        f.write(html)
-
-    with open("DOCUMENTACAO_FINAL/dashboard_demonstracao.html", "w", encoding="utf-8") as f:
         f.write(html)
 
     print(f"[OK] Dashboard Interativo gerado com sucesso! ({len(transacoes)} transações indexadas)")

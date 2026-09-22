@@ -39,3 +39,7 @@ jobs:
       - name: 3. Executar Testes de Resiliência e Armadilhas de Negócio (4 Testes)
         run: |
           python .agents/skills/analise-gargalos-conciliacao/scripts/test_gargalos_resiliencia.py
+
+      - name: 4. Executar Testes de Regressão de Regras de Negócio & Segurança
+        run: |
+          python test_regras_negocio.py

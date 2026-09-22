@@ -155,24 +155,30 @@ BEGIN
         FROM TB_CONCILIACAO_BANCARIA
         WHERE DATA_TRANSACAO >= DATEADD(DAY, -@DIAS_ATRAS, GETDATE())
     )
+    -- Não filtra FLAG_DISCREPANCIA = 0: uma duplicata acima do teto precisa manter
+    -- as duas marcações, senão o estorno da duplicidade passa despercebido.
     UPDATE T
     SET T.FLAG_DISCREPANCIA = 1,
         T.STATUS_CONCILIACAO = 'Discrepância',
-        T.MOTIVO_DISCREPANCIA = 'Potencial duplicata (mesmo banco, conta, valor e data)',
+        T.MOTIVO_DISCREPANCIA = CASE
+            WHEN T.MOTIVO_DISCREPANCIA IS NULL THEN 'Potencial duplicata (mesmo banco, conta, valor e data)'
+            ELSE CONCAT(T.MOTIVO_DISCREPANCIA, ' | Potencial duplicata (mesmo banco, conta, valor e data)')
+        END,
         T.DATA_ATUALIZACAO = GETDATE()
     FROM TB_CONCILIACAO_BANCARIA T
     INNER JOIN DuplicatasPotenciais D ON T.ID_TRANSACAO = D.ID_TRANSACAO
     WHERE D.OCORRENCIA > 1
-      AND T.FLAG_DISCREPANCIA = 0;
+      AND ISNULL(T.MOTIVO_DISCREPANCIA, '') NOT LIKE '%Potencial duplicata%';
 
     -- Registrar Execução da Procedure na Auditoria
     INSERT INTO TB_AUDITORIA_CONCILIACAO (ID_TRANSACAO, ACAO, VALORES_NOVOS, CORRELATION_ID)
-    SELECT TOP 1 
-        ID_TRANSACAO, 
+    SELECT TOP 1
+        ID_TRANSACAO,
         'SP_DISCREPANCIA', 
         CONCAT('Detecção executada. Total de discrepâncias: ', (SELECT COUNT(*) FROM TB_CONCILIACAO_BANCARIA WHERE FLAG_DISCREPANCIA = 1)),
         @CORRELATION_ID
-    FROM TB_CONCILIACAO_BANCARIA;
+    FROM TB_CONCILIACAO_BANCARIA
+    ORDER BY ID_TRANSACAO DESC;
 
     -- Retornar resultado em JSON para consumo direto do Power Automate
     SELECT 

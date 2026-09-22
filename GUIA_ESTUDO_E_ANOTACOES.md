@@ -98,7 +98,7 @@ Preencha estes tópicos com base na sua história real antes das 14h:
 Se a recrutadora pedir: *"Você consegue me mostrar um pouco de como isso funciona na prática?"*, siga este roteiro de 4 passos:
 
 1. **Passo 1: Abrir o Fluxograma Visual no Navegador**
-   - Abra o arquivo: [`fluxograma_apresentacao.html`](file:///c:/Users/dayan/Downloads/case-tecnico/fluxograma_apresentacao.html)
+   - Abra o arquivo: [`fluxograma_apresentacao.html`](fluxograma_apresentacao.html)
    - *O que falar:* *"Montei este fluxograma para mostrar como o dado nasce nos 8 bancos às 07h00 da manhã, passa pelas fases de segurança e auditoria para nunca duplicar saldos, e chega mastigado para o analista e para o gestor."*
 
 2. **Passo 2: Rodar o Robô no Terminal PowerShell**
@@ -109,7 +109,7 @@ Se a recrutadora pedir: *"Você consegue me mostrar um pouco de como isso funcio
    - *O que falar:* *"Vou rodar a esteira ao vivo. Em 6 segundos, ela extrai os 8 bancos, puxa a cotação oficial do Banco Central e decompõe no que foi gasto: R$ 649 mil em passagens aéreas, R$ 149 mil em hotéis, locomoção e taxas."*
 
 3. **Passo 3: Mostrar o Dashboard Interativo**
-   - O navegador vai abrir automaticamente em [`dashboard_demonstracao.html`](file:///c:/Users/dayan/Downloads/case-tecnico/dashboard_demonstracao.html).
+   - O navegador vai abrir automaticamente em [`dashboard_demonstracao.html`](dashboard_demonstracao.html).
    - *O que falar:* *"Aqui está o painel do gestor. Se ele quiser ver só passagens aéreas ou só os gastos do Bradesco, basta clicar no filtro e tudo se recalcula na hora."*
 
 4. **Passo 4: Mostrar o E-mail Real no Gmail**

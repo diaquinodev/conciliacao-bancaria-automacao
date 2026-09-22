@@ -3,24 +3,34 @@
 // Compatível com: Power BI Desktop / Excel Power Query (Editor Avançado)
 // Autor: Diego Luiz Lino de Aquino (diaquinotech@gmail.com)
 // Contexto: Processo Seletivo - Desenvolvedor de Automação
+//
+// Entrada: transacoes_brutas.json gerado por extrator_bancario.py
+// Contrato: id_externo, banco, conta, data_transacao, valor, descricao, tipo,
+//           categoria_sugerida (opcional), data_extracao, correlation_id
 // ==============================================================================
 
 let
     // --------------------------------------------------------------------------
-    // 1. EXTRAÇÃO E CARGA DE DADOS
-    // Conecta à saída consolidada do motor Python ou Staging SQL Server
+    // 0. PARÂMETRO DE ORIGEM
+    // Ajuste para o caminho da pasta do projeto (ou transforme em Parâmetro do
+    // Power BI: Página Inicial > Gerenciar Parâmetros > "CaminhoTransacoes").
     // --------------------------------------------------------------------------
-    Origem = Json.Document(File.Contents("C:\Users\dayan\Downloads\case-tecnico\transacoes_brutas.json")),
-    
+    CaminhoTransacoes = "C:\case-tecnico\transacoes_brutas.json",
+
+    // --------------------------------------------------------------------------
+    // 1. EXTRAÇÃO E CARGA DE DADOS
+    // --------------------------------------------------------------------------
+    Origem = Json.Document(File.Contents(CaminhoTransacoes)),
+
     // Converte a lista raiz de objetos JSON em Tabela
     TabelaDeLista = Table.FromList(Origem, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
-    
-    // Expande os registros estruturados para colunas individuais
+
+    // Expande os registros com os mesmos nomes de campo emitidos pelo extrator Python
     ColunasExpandidas = Table.ExpandRecordColumn(
-        TabelaDeLista, 
-        "Column1", 
-        {"id_transacao", "banco", "agencia", "conta", "data_movimentacao", "valor", "tipo_operacao", "descricao_historico", "numero_documento"}, 
-        {"id_transacao", "banco", "agencia", "conta", "data_movimentacao", "valor", "tipo_operacao", "descricao_historico", "numero_documento"}
+        TabelaDeLista,
+        "Column1",
+        {"id_externo", "banco", "conta", "data_transacao", "valor", "descricao", "tipo", "categoria_sugerida", "correlation_id"},
+        {"id_externo", "banco", "conta", "data_transacao", "valor", "descricao", "tipo", "categoria_sugerida", "correlation_id"}
     ),
 
     // --------------------------------------------------------------------------
@@ -31,64 +41,65 @@ let
 
     // --------------------------------------------------------------------------
     // 3. LIMPEZA, HIGIENIZAÇÃO E REMOÇÃO DE DUPLICATAS IDEMPOTENTES
+    // Mesma chave da constraint UK_EXTERNO_BANCO_CONTA do SQL Server
     // --------------------------------------------------------------------------
-    DuplicatasRemovidas = Table.Distinct(TabelaBufferizada, {"id_transacao"}),
+    DuplicatasRemovidas = Table.Distinct(TabelaBufferizada, {"id_externo", "banco", "conta"}),
 
     // Tipagem rigorosa dos dados para garantir integridade contábil
+    // (data_transacao vem como "AAAA-MM-DD HH:MM:SS"; valor em Decimal Fixo = moeda)
     TiposCorrigidos = Table.TransformColumnTypes(DuplicatasRemovidas, {
-        {"id_transacao", type text},
+        {"id_externo", type text},
         {"banco", type text},
-        {"agencia", type text},
         {"conta", type text},
-        {"data_movimentacao", type date},
-        {"valor", type number},
-        {"tipo_operacao", type text},
-        {"descricao_historico", type text},
-        {"numero_documento", type text}
-    }),
+        {"data_transacao", type datetime},
+        {"valor", Currency.Type},
+        {"descricao", type text},
+        {"tipo", type text},
+        {"categoria_sugerida", type text},
+        {"correlation_id", type text}
+    }, "en-US"),
 
     // --------------------------------------------------------------------------
     // 4. TRANSFORMAÇÃO DE REGRAS DE NEGÓCIO (VIAGENS CORPORATIVAS)
     // --------------------------------------------------------------------------
-    // Padroniza a descrição removendo espaços excedentes e caracteres invisíveis
+    // Padroniza textos removendo espaços excedentes
     DescricaoLimpa = Table.TransformColumns(TiposCorrigidos, {
-        {"descricao_historico", Text.Trim, type text},
-        {"banco", Text.Upper, type text}
+        {"descricao", Text.Trim, type text},
+        {"banco", Text.Upper, type text},
+        {"tipo", each Text.Upper(Text.Trim(_)), type text}
     }),
 
-    // Criação de Categoria Financeira a partir do histórico (Regras Heurísticas)
-    CategoriaAdicionada = Table.AddColumn(DescricaoLimpa, "categoria_despesa", each 
-        if Text.Contains([descricao_historico], "LATAM", Comparer.OrdinalIgnoreCase) or 
-           Text.Contains([descricao_historico], "GOL", Comparer.OrdinalIgnoreCase) or 
-           Text.Contains([descricao_historico], "AZUL", Comparer.OrdinalIgnoreCase) or 
-           Text.Contains([descricao_historico], "BSP", Comparer.OrdinalIgnoreCase) or
-           Text.Contains([descricao_historico], "TKT", Comparer.OrdinalIgnoreCase) then "Aéreo / Bilhetes"
-        else if Text.Contains([descricao_historico], "HOTEL", Comparer.OrdinalIgnoreCase) or 
-                Text.Contains([descricao_historico], "IBIS", Comparer.OrdinalIgnoreCase) or 
-                Text.Contains([descricao_historico], "WINDSOR", Comparer.OrdinalIgnoreCase) or 
-                Text.Contains([descricao_historico], "COPACABANA", Comparer.OrdinalIgnoreCase) then "Hospedagem"
-        else if Text.Contains([descricao_historico], "UBER", Comparer.OrdinalIgnoreCase) or 
-                Text.Contains([descricao_historico], "TRANSFER", Comparer.OrdinalIgnoreCase) or 
-                Text.Contains([descricao_historico], "LOCADORA", Comparer.OrdinalIgnoreCase) or
-                Text.Contains([descricao_historico], "LOCALIZA", Comparer.OrdinalIgnoreCase) then "Locomoção / Transfer"
-        else if Text.Contains([descricao_historico], "TAXA", Comparer.OrdinalIgnoreCase) or 
-                Text.Contains([descricao_historico], "DU", Comparer.OrdinalIgnoreCase) or
-                Text.Contains([descricao_historico], "IOF", Comparer.OrdinalIgnoreCase) then "Taxas & Encargos"
+    // Categoria financeira: usa a sugerida pelo extrator e, na ausência, aplica
+    // regras heurísticas sobre o histórico bancário.
+    ContemAlgum = (texto as nullable text, termos as list) as logical =>
+        texto <> null and List.AnyTrue(List.Transform(termos, (t) => Text.Contains(texto, t, Comparer.OrdinalIgnoreCase))),
+
+    CategoriaAdicionada = Table.AddColumn(DescricaoLimpa, "categoria_despesa", each
+        if [categoria_sugerida] <> null and [categoria_sugerida] <> "" then [categoria_sugerida]
+        else if ContemAlgum([descricao], {"TAXA", "IOF", " DU "}) then "Taxas/Serviços"
+        else if ContemAlgum([descricao], {"LATAM", "GOL LINHAS", "AZUL", "BSP", "TKT", "CHARTER"}) then "Passagens Aéreas"
+        else if ContemAlgum([descricao], {"HOTEL", "IBIS", "WINDSOR", "COPACABANA", "DIARIA", "DIÁRIA"}) then "Hospedagem"
+        else if ContemAlgum([descricao], {"UBER", "TRANSFER", "LOCADORA", "LOCALIZA"}) then "Transfer/Transporte"
+        else if ContemAlgum([descricao], {"SEGURO", "ASSIST CARD", "CHUBB"}) then "Seguros"
         else "Outros Lançamentos",
         type text
     ),
 
-    // Criação de Sinal Contábil (Créditos positivos, Débitos negativos)
-    ValorContabilAdicionado = Table.AddColumn(CategoriaAdicionada, "valor_fluxo_caixa", each 
-        if [tipo_operacao] = "DEBITO" then -[valor] else [valor],
-        type number
+    // Sinal contábil: débitos negativos, créditos positivos.
+    // O extrator emite "Débito"/"Crédito"; aceita também a grafia sem acento.
+    ValorContabilAdicionado = Table.AddColumn(CategoriaAdicionada, "valor_fluxo_caixa", each
+        if List.Contains({"DÉBITO", "DEBITO"}, [tipo]) then -[valor] else [valor],
+        Currency.Type
     ),
+
+    // Teto de alçada da tesouraria (mesma regra da SP_DETECTAR_DISCREPANCIAS)
+    FlagAlcada = Table.AddColumn(ValorContabilAdicionado, "acima_teto_alcada", each [valor] > 100000, type logical),
 
     // --------------------------------------------------------------------------
     // 5. FILTRAGEM DE INTEGRIDADE
     // Elimina valores zerados ou nulos que não afetam a tesouraria
     // --------------------------------------------------------------------------
-    LinhasFiltradas = Table.SelectRows(ValorContabilAdicionado, each [valor] > 0 and [data_movimentacao] <> null)
+    LinhasFiltradas = Table.SelectRows(FlagAlcada, each [valor] <> null and [valor] > 0 and [data_transacao] <> null)
 
 in
     LinhasFiltradas

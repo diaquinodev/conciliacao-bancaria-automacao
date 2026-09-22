@@ -22,6 +22,8 @@ if sys.platform == "win32":
         sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 # Manter nível de logs em WARNING durante a demo executiva para saída limpa
+# (precisa valer antes de instanciar extrator e analisador, que logam no construtor)
+os.environ.setdefault("LOG_LEVEL", "WARNING")
 logging.basicConfig(level=logging.WARNING)
 
 from extrator_bancario import ExtratorBancario
@@ -125,11 +127,11 @@ def main():
         print()
 
     print("-" * 74)
-    print("AÇÕES AUTOMATIZADAS DISPARADAS NO WORKFLOW:")
-    print("   [OK] Notificação de alta prioridade enviada para: diaquinotech@gmail.com")
-    print("   [OK] Alerta de fechamento publicado no canal da Controladoria (Microsoft Teams)")
-    print("   [OK] Base de dados do Painel Power BI atualizada em tempo real")
-    print("   [OK] Trilha de auditoria gravada com Correlation ID: 'FECHAMENTO-DIARIO-2026'")
+    print("PRÓXIMAS AÇÕES DO WORKFLOW (orquestradas pelo Power Automate em produção - flow.json):")
+    print("   [FLUXO] Notificação de alta prioridade à Controladoria (demo real: enviar_email_real.py)")
+    print("   [FLUXO] Alerta de fechamento no canal da Controladoria (Microsoft Teams)")
+    print("   [FLUXO] Atualização do dataset do Painel Power BI")
+    print("   [OK]    Trilha de auditoria registrada com Correlation ID: 'FECHAMENTO-DIARIO-2026'")
     print_banner("FECHAMENTO DIÁRIO HOMOLOGADO COM SUCESSO!")
 
 

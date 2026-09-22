@@ -31,13 +31,17 @@ class StructuredLogger:
     def __init__(self, correlation_id: str) -> None:
         self.correlation_id = correlation_id
         self.logger = logging.getLogger(f"AnalisadorIA_{correlation_id[:8]}")
-        self.logger.setLevel(logging.INFO)
+        self.logger.setLevel(os.getenv("LOG_LEVEL", "INFO").upper())
+        self.logger.propagate = False  # evita duplicar cada evento no handler do logger raiz
         if not self.logger.handlers:
             handler = logging.StreamHandler()
             handler.setFormatter(logging.Formatter("%(message)s"))
             self.logger.addHandler(handler)
 
     def log(self, level: str, action: str, message: str, **kwargs: Any) -> None:
+        nivel = logging.getLevelName(level)
+        if isinstance(nivel, int) and not self.logger.isEnabledFor(nivel):
+            return
         payload = {
             "timestamp": datetime.now().isoformat(),
             "level": level,
@@ -46,7 +50,7 @@ class StructuredLogger:
             "message": message,
             **kwargs,
         }
-        self.logger.info(json.dumps(payload, ensure_ascii=False))
+        self.logger.log(nivel if isinstance(nivel, int) else logging.INFO, json.dumps(payload, ensure_ascii=False))
 
 
 @dataclass
@@ -75,6 +79,8 @@ class AnaliseDiscrepanciaOutput:
 
 class AnalisadorIADiscrepancias:
     """Motor de análise inteligente de anomalias contábeis via LLM."""
+
+    TETO_ALCADA = 100000.00  # Mesma regra da SP_DETECTAR_DISCREPANCIAS
 
     SYSTEM_PROMPT = """Você é um especialista sênior em conformidade financeira, auditoria contábil e conciliação bancária de grandes empresas de viagens corporativas.
 Sua missão é analisar discrepâncias encontradas na esteira de conciliação bancária entre 8 contas comerciais (BB, Bradesco, Itaú, Santander, Caixa, HSBC, Sicredi, Inter).
@@ -109,12 +115,12 @@ Responda no formato:
     def __init__(
         self,
         api_key: Optional[str] = None,
-        model: str = "claude-3-5-sonnet-20241022",
+        model: Optional[str] = None,
         correlation_id: Optional[str] = None,
         feedback_file: str = "feedback_loop_historico.json",
     ) -> None:
         self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
-        self.model = model
+        self.model = model or os.getenv("ANTHROPIC_MODEL", "claude-sonnet-5")
         self.correlation_id = correlation_id or str(uuid.uuid4())
         self.feedback_file = feedback_file
         self.logger = StructuredLogger(self.correlation_id)
@@ -140,20 +146,27 @@ Responda no formato:
             motivo_sql = str(item.get("motivo_detectado_sql", "")).lower()
             banco = item.get("banco", "DESCONHECIDO")
 
-            if "duplicada" in motivo_sql or "duplic" in desc:
+            eh_duplicata = "duplicada" in motivo_sql or "duplic" in desc
+            acima_teto = valor > self.TETO_ALCADA or "crítico" in motivo_sql
+
+            # Regra de negócio: acima do teto de alçada o risco é sempre Alto e exige
+            # aprovação do CFO, inclusive quando também é uma duplicata.
+            if acima_teto:
+                motivo = f"Operação atípica de alto valor (R$ {valor:,.2f}) excedendo o limite de alçada padrão da tesouraria."
+                if eh_duplicata:
+                    motivo += " Há indício adicional de lançamento duplicado."
+                risco = "Alto"
+                acao = "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços."
+                precedente = "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês."
+                padrao = "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+                confianca = 0.94
+            elif eh_duplicata:
                 motivo = f"Transação idêntica detectada no {banco}. Provável re-tentativa após timeout de confirmação na API bancária."
                 risco = "Médio"
                 acao = "Marcar transação excedente como 'Duplicata Confirmada' e estornar lançamento pendente no ERP."
                 precedente = "2 casos similares registrados no fechamento da última semana em dias de alta volumetria."
                 padrao = "Ocorrência comum em janelas de fechamento de lotes entre 14h e 16h."
                 confianca = 0.98
-            elif valor > 100000 or "crítico" in motivo_sql:
-                motivo = f"Operação atípica de alto valor (R$ {valor:,.2f}) excedendo o limite de alçada padrão da tesouraria."
-                risco = "Alto" if "charter" not in desc.lower() else "Médio"
-                acao = "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços."
-                precedente = "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês."
-                padrao = "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
-                confianca = 0.94
             else:
                 motivo = f"Variação estatística fora da média móvel histórica de 90 dias para a conta {item.get('conta', 'N/A')} do {banco}."
                 risco = "Baixo"

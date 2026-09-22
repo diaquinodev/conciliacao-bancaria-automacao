@@ -12,6 +12,7 @@ import sys
 import json
 import sqlite3
 import hashlib
+import html
 import smtplib
 import webbrowser
 import requests
@@ -70,7 +71,13 @@ def etapa_1_extracao_e_idempotencia():
     ignorados_idempotencia = 0
 
     for t in transacoes:
-        raw_key = f"{t.get('banco')}|{t.get('conta')}|{t.get('data_transacao')}|{t.get('valor')}|{t.get('descricao')}"
+        # Chave normalizada: valor sempre com 2 casas e descrição sem variação de caixa/espaços,
+        # para que "1500.0" e "1500.00" (ou "Hotel " e "HOTEL") gerem o mesmo hash.
+        raw_key = (
+            f"{str(t.get('banco', '')).strip().upper()}|{str(t.get('conta', '')).strip()}|"
+            f"{str(t.get('data_transacao', '')).strip()}|{float(t.get('valor', 0.0)):.2f}|"
+            f"{str(t.get('descricao', '')).strip().upper()}"
+        )
         hash_sha256 = hashlib.sha256(raw_key.encode("utf-8")).hexdigest()
 
         try:
@@ -150,7 +157,7 @@ def etapa_3_analise_gastos(transacoes):
     print(" >> [ETAPA 3/5] AUDITORIA DE DESPESAS: 'NO QUE FOI GASTO'")
     print("="*75, flush=True)
 
-    total_gasto = sum(t["valor"] for t in transacoes)
+    total_gasto = sum(float(t.get("valor", 0.0)) for t in transacoes)
     categorias = defaultdict(lambda: {"qtd": 0, "total": 0.0})
     bancos = defaultdict(lambda: {"qtd": 0, "total": 0.0})
 
@@ -166,7 +173,7 @@ def etapa_3_analise_gastos(transacoes):
     print(f"\n   TOTAL CONSOLIDADO AUDITADO: R$ {total_gasto:,.2f} em {len(transacoes)} lançamentos.\n")
     print("   DECOMPOSIÇÃO POR CATEGORIA:")
     for cat, dados in sorted(categorias.items(), key=lambda x: x[1]["total"], reverse=True):
-        pct = (dados["total"] / total_gasto) * 100
+        pct = (dados["total"] / total_gasto) * 100 if total_gasto else 0.0
         print(f"   • {cat.ljust(25)}: R$ {dados['total']:>12,.2f} ({pct:>5.1f}%) | {dados['qtd']:>2} despesas", flush=True)
 
     return total_gasto, categorias, bancos
@@ -184,7 +191,7 @@ def etapa_4_atualizar_dashboard():
     print("   [OK] dashboard_demonstracao.html sincronizado com filtros dinâmicos.", flush=True)
 
 
-def etapa_5_enviar_email_executivo(total_gasto, categorias, bancos, dados_mercado):
+def etapa_5_enviar_email_executivo(total_gasto, categorias, bancos, dados_mercado, qtd_lancamentos):
     """Envia o e-mail real com o detalhamento de onde e no que foi gasto."""
     print("\n" + "="*75)
     print(" >> [ETAPA 5/5] ENVIANDO RELATÓRIO EXECUTIVO REAL VIA GMAIL SMTP (TLS)")
@@ -196,17 +203,17 @@ def etapa_5_enviar_email_executivo(total_gasto, categorias, bancos, dados_mercad
 
     linhas_tabela_cat = ""
     for cat, d in sorted(categorias.items(), key=lambda x: x[1]["total"], reverse=True):
-        pct = (d["total"] / total_gasto) * 100
+        pct = (d["total"] / total_gasto) * 100 if total_gasto else 0.0
         linhas_tabela_cat += f"""
         <tr>
-          <td><strong>{cat}</strong></td>
+          <td><strong>{html.escape(str(cat))}</strong></td>
           <td style="text-align: center;">{d['qtd']}</td>
           <td style="text-align: right; font-weight: bold; color: #0b1320;">R$ {d['total']:,.2f}</td>
           <td style="text-align: right;"><span style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;">{pct:.1f}%</span></td>
         </tr>
         """
 
-    html = f"""
+    corpo_html = f"""
     <!DOCTYPE html>
     <html lang="pt-BR">
     <head>
@@ -252,7 +259,7 @@ def etapa_5_enviar_email_executivo(total_gasto, categorias, bancos, dados_mercad
               {linhas_tabela_cat}
               <tr style="background: #f8fafc; font-weight: bold;">
                 <td>TOTAL CONSOLIDADO</td>
-                <td style="text-align: center;">216</td>
+                <td style="text-align: center;">{qtd_lancamentos}</td>
                 <td style="text-align: right; color: #bd1023;">R$ {total_gasto:,.2f}</td>
                 <td style="text-align: right;">100.0%</td>
               </tr>
@@ -303,7 +310,7 @@ def etapa_5_enviar_email_executivo(total_gasto, categorias, bancos, dados_mercad
     msg["From"] = f"Esteira de Conciliação <{SMTP_EMAIL}>"
     msg["To"] = SMTP_EMAIL
     msg["X-Priority"] = "1"
-    msg.attach(MIMEText(html, "html", "utf-8"))
+    msg.attach(MIMEText(corpo_html, "html", "utf-8"))
 
     try:
         s = smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=12)
@@ -335,7 +342,7 @@ if __name__ == "__main__":
     etapa_4_atualizar_dashboard()
 
     # 5. Envio Real de E-mail
-    etapa_5_enviar_email_executivo(total_g, cats, bcs, mercado)
+    etapa_5_enviar_email_executivo(total_g, cats, bcs, mercado, len(txs))
 
     print("\n" + "="*75)
     print(" >> [FINALIZAÇÃO] ABRINDO O PAINEL EXECUTIVO NO NAVEGADOR...")

@@ -97,8 +97,9 @@ class JsonStructuredFormatter(logging.Formatter):
 def setup_logger(correlation_id: str) -> logging.Logger:
     """Configura e retorna um logger estruturado em formato JSON."""
     logger = logging.getLogger(f"ExtratorBancario_{correlation_id[:8]}")
-    logger.setLevel(logging.INFO)
+    logger.setLevel(os.getenv("LOG_LEVEL", "INFO").upper())
     logger.handlers.clear()
+    logger.propagate = False  # evita duplicar cada evento no handler do logger raiz
 
     handler = logging.StreamHandler()
     handler.setFormatter(JsonStructuredFormatter())
@@ -235,7 +236,8 @@ class ExtratorBancario:
                         banco=banco,
                         message=f"Falha de autenticação OAuth em {banco}",
                         duration_ms=duration_ms,
-                        details={"status_code": response.status_code, "response": response.text[:200]},
+                        # O corpo da resposta de erro do OAuth pode ecoar client_id/segredos: não logar.
+                        details={"status_code": response.status_code},
                     )
             except Exception as exc:
                 duration_ms = (time.time() - start_time) * 1000
