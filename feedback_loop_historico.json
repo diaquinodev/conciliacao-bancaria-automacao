@@ -534,5 +534,54 @@
       "confianca_geral": 0.96
     },
     "status_auditoria": "Aguardando_Revisao_Humana"
+  },
+  {
+    "timestamp": "2026-09-29T15:46:12.291913",
+    "correlation_id": "057551c5-b72b-4b64-989b-109c0df9716f",
+    "entrada": [
+      {
+        "id": "DISC-001",
+        "banco": "ITAU",
+        "conta": "12345-6",
+        "data_transacao": "2026-09-21",
+        "valor": 850000.0,
+        "descricao": "FATURA BSP IATA CONSOLIDADO 400 E-TICKETS",
+        "motivo_detectado_sql": "DIVERGENCIA_AGRUPADOR_LOTE"
+      },
+      {
+        "id": "DISC-002",
+        "banco": "BRADESCO",
+        "conta": "98765-4",
+        "data_transacao": "2026-09-21",
+        "valor": 320.0,
+        "descricao": "HOTEL WINDSOR NO-SHOW RETENCAO 1 DIARIA",
+        "motivo_detectado_sql": "duplicada_cancelamento_parcial"
+      }
+    ],
+    "diagnostico_ia": {
+      "analises": [
+        {
+          "id": "DISC-001",
+          "motivo_provavel": "Operação atípica de alto valor (R$ 850,000.00) excedendo o limite de alçada padrão da tesouraria.",
+          "confianca": 0.94,
+          "nivel_risco": "Alto",
+          "acao_recomendada": "Solicitar autorização expressa do Diretor Financeiro (CFO) e confrontar com o contrato de prestação de serviços.",
+          "precedentes_similares": "Fretamentos aéreos corporativos e eventos trimestrais de diretoria apresentam este perfil 1x por mês.",
+          "padrao_identificado": "Discrepância associada a compras concentradas de bilhetes de delegação ou eventos corporativos."
+        },
+        {
+          "id": "DISC-002",
+          "motivo_provavel": "Transação idêntica detectada no BRADESCO. Provável re-tentativa após timeout de confirmação na API bancária.",
+          "confianca": 0.98,
+          "nivel_risco": "Médio",
+          "acao_recomendada": "Marcar transação excedente como 'Duplicata Confirmada' e estornar lançamento pendente no ERP.",
+          "precedentes_similares": "2 casos similares registrados no fechamento da última semana em dias de alta volumetria.",
+          "padrao_identificado": "Ocorrência comum em janelas de fechamento de lotes entre 14h e 16h."
+        }
+      ],
+      "resumo_executivo": "Auditoria concluída para 2 discrepâncias. Risco geral moderado com 100% de ações mitigatórias definidas.",
+      "confianca_geral": 0.96
+    },
+    "status_auditoria": "Aguardando_Revisao_Humana"
   }
 ]
