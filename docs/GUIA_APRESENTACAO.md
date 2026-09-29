@@ -1,4 +1,4 @@
-# 🤝 GUIA DE ESTUDO & PREPARAÇÃO PARA ENTREVISTA COM RH ([REMOVIDO])
+# 🤝 GUIA DE ESTUDO & PREPARAÇÃO PARA APRESENTAR O CASE
 ## Foco: Empatia com Negócio, Lógica de Processos, Comunicação e Pessoas
 **Candidato:** Diego Luiz Lino de Aquino  
 **Entrevista:** 22/09/2026, 14h00 às 17h00 (SP)  
@@ -8,7 +8,7 @@
 
 ## 🌟 1. A MUDANÇA DE POSTURA: DO "PROGRAMADOR" PARA O "FACILITADOR DE NEGÓCIOS"
 
-| ❌ O que NÃO fazer com a RH (Evitar) | ✅ O que a recrutadora da [removido] AMA ouvir |
+| ❌ O que NÃO fazer com a RH (Evitar) | ✅ O que a recrutadora AMA ouvir |
 | :--- | :--- |
 | Explicar detalhes de código, banco de dados ou bibliotecas Python. | Falar sobre **como você ajuda as pessoas a trabalharem melhor e sem estresse**. |
 | Falar em termos técnicos ("SHA-256", "Circuit Breaker", "Lazy Evaluation"). | Falar em termos de pessoas: **"eliminar tarefas chatas e repetitivas do time"**, **"dar segurança ao analista"**. |
@@ -61,9 +61,9 @@ Quando ela perguntar: *"Me conta um pouco sobre o que você pensou para esse cas
 > *"Primeiro, entendo o **impacto de negócio e o risco** de cada pedido. Algo que impacta o fluxo de caixa ou que pode gerar multa com fornecedor (como as faturas de companhias aéreas) sempre tem prioridade sobre um relatório cosmético.*  
 > *Segundo, mantenho **alinhamento transparente**: nunca digo apenas 'não dá'. Eu explico: 'Entendo a sua urgência. Hoje estou focado em liberar a conciliação bancária que evita juros para a empresa; consigo encaixar o seu relatório na quinta-feira de manhã. Podemos combinar assim?'. Isso gera confiança."*
 
-### Pergunta 4: *"Por que você quer trabalhar nesta oportunidade e na [removido]?"*
+### Pergunta 4: *"Por que você quer trabalhar nesta oportunidade e nesta empresa?"*
 > **Como Responder:**  
-> *"A [removido] é a maior referência em conectar talentos especializados com empresas que valorizam a eficiência e as pessoas. E essa vaga em específico me atrai porque é um ambiente onde finanças e automação andam juntas.*  
+> *"A empresa é referência em conectar talentos especializados com empresas que valorizam a eficiência e as pessoas. E essa vaga em específico me atrai porque é um ambiente onde finanças e automação andam juntas.*  
 > *Eu quero estar em um lugar onde o meu trabalho faça a operação rodar com fluidez, onde os gestores tenham dados confiáveis para tomar decisões e o time operacional trabalhe com leveza e orgulho do que faz."*
 
 ---
@@ -98,18 +98,18 @@ Preencha estes tópicos com base na sua história real antes das 14h:
 Se a recrutadora pedir: *"Você consegue me mostrar um pouco de como isso funciona na prática?"*, siga este roteiro de 4 passos:
 
 1. **Passo 1: Abrir o Fluxograma Visual no Navegador**
-   - Abra o arquivo: [`fluxograma_apresentacao.html`](fluxograma_apresentacao.html)
+   - Abra o arquivo: [`fluxograma_apresentacao.html`](apresentacao/fluxograma_apresentacao.html)
    - *O que falar:* *"Montei este fluxograma para mostrar como o dado nasce nos 8 bancos às 07h00 da manhã, passa pelas fases de segurança e auditoria para nunca duplicar saldos, e chega mastigado para o analista e para o gestor."*
 
 2. **Passo 2: Rodar o Robô no Terminal PowerShell**
    - Execute:
      ```powershell
-     py -3.13 executar_esteira_ao_vivo.py
+     py -3.13 src/executar_esteira_ao_vivo.py
      ```
    - *O que falar:* *"Vou rodar a esteira ao vivo. Em 6 segundos, ela extrai os 8 bancos, puxa a cotação oficial do Banco Central e decompõe no que foi gasto: R$ 649 mil em passagens aéreas, R$ 149 mil em hotéis, locomoção e taxas."*
 
 3. **Passo 3: Mostrar o Dashboard Interativo**
-   - O navegador vai abrir automaticamente em [`dashboard_demonstracao.html`](dashboard_demonstracao.html).
+   - O navegador vai abrir automaticamente em [`dashboard_demonstracao.html`](../dashboard_demonstracao.html).
    - *O que falar:* *"Aqui está o painel do gestor. Se ele quiser ver só passagens aéreas ou só os gastos do Bradesco, basta clicar no filtro e tudo se recalcula na hora."*
 
 4. **Passo 4: Mostrar o E-mail Real no Gmail**
@@ -118,4 +118,4 @@ Se a recrutadora pedir: *"Você consegue me mostrar um pouco de como isso funcio
 
 ---
 
-> **Lembre-se:** A recrutadora da [removido] quer ver em você um **parceiro confiável, comunicativo e empático**. Sorria, respire com calma, fale no ritmo dela e mostre que por trás da sua competência técnica existe um profissional focado em pessoas e resultados. Você vai arrebentar! 👏🚀
+> **Lembre-se:** A recrutadora quer ver em você um **parceiro confiável, comunicativo e empático**. Sorria, respire com calma, fale no ritmo dela e mostre que por trás da sua competência técnica existe um profissional focado em pessoas e resultados. Você vai arrebentar! 👏🚀

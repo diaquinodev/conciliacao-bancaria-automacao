@@ -1,4 +1,4 @@
-# ANÁLISE DE REQUISITOS - [removido]
+# ANÁLISE DE REQUISITOS
 ## Vaga: Desenvolvedor de Automação | Setor: Viagens Corporativas
 **Candidato:** Diego Luiz Lino de Aquino  
 **Data da Entrevista:** 22/09/2026 - 14h às 17h (Horário de Brasília)  

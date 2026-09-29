@@ -6,7 +6,7 @@
 ### Metadados do Projeto & Engenharia
 * **Autor:** Diego Luiz Lino de Aquino
 * **Cargo / Perfil Alvo:** Desenvolvedor de Automação & Engenheiro de Dados (Process Automation / Data Analytics)
-* **Empresa / Avaliador:** [removido] / Engenharia de Dados & Liderança Técnica
+* **Avaliador:** Engenharia de Dados & Liderança Técnica
 * **Domínio de Aplicação:** Tesouraria Corporativa, Finanças e Viagens Corporativas (Corporate Travel)
 * **Status da Solução:** Homologada com 100% de cobertura de testes (Integridade de Dados & Resiliência a Falhas)
 * **Padrões de Engenharia Adotados:** C4 Model, Architecture Decision Records (ADRs - Martin Fowler / Michael Nygard), Medallion Architecture (Bronze/Silver/Gold), Data Contracts, SOX 404 (Trilha de Auditoria WORM) e FinOps.
@@ -44,20 +44,20 @@ O projeto foi construído sob o princípio de **Time-to-First-Value**: o engenhe
 ### Passo 1: Executar a Esteira Completa ao Vivo
 Executa a extração dos 8 bancos, coleta câmbio/Selic em tempo real, aplica idempotência e conciliação em SQLite (espelho do T-SQL), categoriza despesas de viagens, gera o relatório executivo e envia e-mail TLS formatado:
 ```powershell
-py -3.13 executar_esteira_ao_vivo.py
+py -3.13 src/executar_esteira_ao_vivo.py
 ```
 
 ### Passo 2: Executar a Suíte de Testes de Integridade de Dados
 Valida 13 testes unitários e de contrato (esquema, tipos, soma matemática exata, consistência dos filtros do dashboard):
 ```powershell
-py -3.13 test_dashboard_integridade.py
+py -3.13 tests/test_dashboard_integridade.py
 ```
 *Resultado Esperado:* `13 passed in 0.08s (100% OK)`.
 
 ### Passo 3: Executar a Suíte de Testes de Resiliência e Gargalos Arquiteturais
 Valida idempotência transacional sob estresse, Circuit Breaker em falhas 429/503, tolerâncias contábeis de centavos e o princípio das partidas dobradas:
 ```powershell
-py -3.13 .agents/skills/analise-gargalos-conciliacao/scripts/test_gargalos_resiliencia.py
+py -3.13 tests/test_gargalos_resiliencia.py
 ```
 *Resultado Esperado:* `4 passed in 0.04s (100% OK)`.
 
@@ -121,7 +121,7 @@ Precisávamos definir a espinha dorsal de processamento para conciliação banc�
 Adotamos a **Opção A**. O Python resolve com maestria o que o Low-Code não consegue fazer (mTLS, backoff com jitter, criptografia SHA-256 e chamadas dinâmicas a APIs REST). O SQL Server garante conformidade ACID e integridade referencial. O Power Query permite que o time fiscal audite e ajuste de-paras de despesas, e o Power Automate atua como maestro corporativo.
 
 #### Consequências & Trade-offs
-* **Vantagens (+):** TCO mínimo, execução ultrarrápida (menos de 4 segundos), conformidade com os padrões corporativos de TI da [removido] e total governança.
+* **Vantagens (+):** TCO mínimo, execução ultrarrápida (menos de 4 segundos), conformidade com os padrões corporativos de TI e total governança.
 * **Trade-off assumido (-):** Para escalar para mais de 100 milhões de transações diárias em tempo real, seria necessário desacoplar o script Python em microsserviços orientados a eventos via Apache Kafka ou Azure Event Hubs. Para o domínio de tesouraria de viagens corporativas, a solução atual atende com 10x de margem de segurança.
 
 ---

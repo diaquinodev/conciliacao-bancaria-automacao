@@ -3,7 +3,7 @@
 **Candidato:** Diego Luiz Lino de Aquino  
 **Agente Responsável:** Agent 3 - Engenheiro Python (Especialista em APIs, ETL e Python em Produção)  
 **Data:** 2026-09-21  
-**Arquivo Executável:** `DOCUMENTACAO_FINAL/extrator_bancario.py` e `extrator_bancario.py`  
+**Arquivo Executável:** `src/extrator_bancario.py`  
 
 ---
 
@@ -75,7 +75,7 @@ O método `validar_dados(df)` executa validações antes de exportar os dados pa
 
 ---
 
-### 4. Cobertura de Testes Automatizados (`test_extrator_bancario.py`)
+### 4. Cobertura de Testes Automatizados (`tests/test_extrator_bancario.py`)
 
 A suíte de testes unitários foi elaborada utilizando `unittest` e garante 100% de confiabilidade nos seguintes cenários:
 
@@ -93,12 +93,12 @@ A suíte de testes unitários foi elaborada utilizando `unittest` e garante 100%
 
 #### Execução Standalone do Script:
 ```powershell
-python extrator_bancario.py
+python src/extrator_bancario.py
 ```
 
 #### Execução dos Testes Unitários:
 ```powershell
-python -m unittest test_extrator_bancario.py -v
+python -m unittest tests/test_extrator_bancario.py -v
 ```
 
 ---

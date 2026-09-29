@@ -188,4 +188,4 @@ Discrepância: Transação duplicada (Bradesco, R$ 45k)
 
 **PRONTO PARA APRESENTAR AMANHÃ!** 🚀
 
-*Documento preparado para [removido] - Entrevista 22/09/2026, 14h*
+*Documento de apresentação do case técnico de automação bancária - 22/09/2026*

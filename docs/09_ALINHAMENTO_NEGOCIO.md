@@ -1,8 +1,8 @@
-# 🏛️ RELATÓRIO EXECUTIVO: ALINHAMENTO ESTRATÉGICO DE NEGÓCIO, METODOLOGIA [REMOVIDO] E MATURIDADE FINANCEIRA
+# 🏛️ RELATÓRIO EXECUTIVO: ALINHAMENTO ESTRATÉGICO DE NEGÓCIO E MATURIDADE FINANCEIRA
 ## Caso de Automação de Conciliação Bancária para Viagens Corporativas
 **Candidato:** Diego Luiz Lino de Aquino  
 **Posição:** Desenvolvedor de Automação / Engenheiro de Soluções Financeiras  
-**Especialidade:** Finanças, Controladoria & Tecnologia (Divisão Finance & Tech - [removido])  
+**Especialidade:** Finanças, Controladoria & Tecnologia  
 **Data de Referência:** Setembro de 2026  
 **Classificação:** Documento Estratégico de Posicionamento Executivo e Análise de Valor de Negócio  
 
@@ -10,25 +10,25 @@
 
 ## 📑 SUMÁRIO EXECUTIVO
 
-Este relatório analisa em profundidade a intersecção entre a **metodologia de seleção da [removido]**, o **modelo operacional de tesouraria no setor de Viagens Corporativas (Travel Management Companies)** e a **solução tecnológica desenvolvida por Diego Luiz Lino de Aquino**.
+Este relatório analisa em profundidade a intersecção entre a **metodologia de avaliação de profissionais de automação financeira**, o **modelo operacional de tesouraria no setor de Viagens Corporativas (Travel Management Companies)** e a **solução tecnológica desenvolvida por Diego Luiz Lino de Aquino**.
 
-Historicamente, o maior fator de descarte de candidatos técnicos em processos de recrutamento sênior conduzidos pela [removido] não é a carência de código, mas o chamado **"Technological Silo Bias"** — a incapacidade do profissional de demonstrar como cada linha de automação, stored procedure ou integração de inteligência artificial reverbera na última linha do demonstrativo financeiro (DRE), no fluxo de caixa livre e no capital de giro da empresa cliente.
+Historicamente, o maior fator de descarte de candidatos técnicos em processos seletivos sêniores não é a carência de código, mas o chamado **"Technological Silo Bias"** — a incapacidade do profissional de demonstrar como cada linha de automação, stored procedure ou integração de inteligência artificial reverbera na última linha do demonstrativo financeiro (DRE), no fluxo de caixa livre e no capital de giro da empresa cliente.
 
 A avaliação detalhada do projeto desenvolvido no repositório demonstra que **a solução arquitetada resolve com precisão cirúrgica as dores mais agudas dos tomadores de decisão corporativos (CFO, Gerente de Tesouraria, Contas a Pagar/Receber e Controladoria)**. O projeto supera um mero exercício técnico: ele entrega uma esteira de conciliação corporativa resiliente, com **Retorno sobre o Investimento (ROI) de 577%**, **Payback de 1,8 meses**, elevação da taxa de **Straight-Through Processing (STP) para 99,8%** e mitigação de perdas operacionais estimadas em **R$ 508.400,00 anuais**.
 
 ---
 
-## 1. O ECOSSISTEMA E O DNA DE RECRUTAMENTO DA [REMOVIDO]
+## 1. O CONTEXTO DE AVALIAÇÃO DE PROFISSIONAIS DE AUTOMAÇÃO FINANCEIRA
 
 ### 1.1. Cultura, História e Filosofia "Ethics First"
-Fundada em 1948, a [removido] é a pioneira mundial em recrutamento especializado. No Brasil e nos principais centros financeiros globais, a consultoria opera sob o lema inegociável **"Ethics First"** (Ética em Primeiro Lugar), alicerçado em quatro pilares corporativos:
+Consultorias de recrutamento especializado costumam operar sob princípios como ética e transparência, alicerçados em quatro pilares corporativos:
 1. **Integridade Absoluta:** Transparência total sobre competências, limitações e expectativas entre cliente e candidato.
 2. **Qualidade antes de Volume:** Apresentação de "shortlists" extremamente qualificadas (normalmente 3 a 5 finalistas que atendam 90%+ das demandas tácitas da cadeira).
-3. **Especialização Vertical por Prática:** Os consultores da [removido] não são generalistas de RH; são especialistas dedicados que atuam exclusivamente em nichos como *Finance & Accounting* ou *Technology*. Muitos foram auditores da Big 4, controllers ou gestores de sistemas.
-4. **Parceria Estratégica Consultiva:** A consultoria atua como conselheira de confiança de conselhos de administração e CFOs, auxiliando na precificação de salários (Guia Salarial [removido]), desenho de organogramas modernos e projetos de transição tecnológica.
+3. **Especialização Vertical por Prática:** Os consultores não são generalistas de RH; são especialistas dedicados que atuam exclusivamente em nichos como *Finance & Accounting* ou *Technology*. Muitos foram auditores da Big 4, controllers ou gestores de sistemas.
+4. **Parceria Estratégica Consultiva:** A consultoria atua como conselheira de confiança de conselhos de administração e CFOs, auxiliando na precificação de salários (guias salariais de mercado), desenho de organogramas modernos e projetos de transição tecnológica.
 
 ### 1.2. A Metodologia de Avaliação: O Conceito de "Dual Fit"
-A [removido] avalia candidatos através de uma matriz bidimensional rígida:
+A avaliação de candidatos costuma seguir uma matriz bidimensional rígida:
 
 ```
                           ALTO FIT DE NEGÓCIO / CULTURAL
@@ -48,14 +48,14 @@ A [removido] avalia candidatos através de uma matriz bidimensional rígida:
                                         │
 ```
 
-Na entrevista com a liderança da [removido] (Headhunters Sêniores e Managing Directors), o candidato não é testado apenas por "quais bibliotecas você domina", mas sim pelo **Método STAR** aplicado ao negócio:
+Na entrevista com a liderança de recrutamento (headhunters sêniores e diretores), o candidato não é testado apenas por "quais bibliotecas você domina", mas sim pelo **Método STAR** aplicado ao negócio:
 - **S (Situação):** Qual era o cenário de ineficiência financeira e risco de liquidez?
 - **T (Tarefa):** O que a liderança de tesouraria precisava estritamente resolver?
 - **A (Ação):** Quais decisões de arquitetura de automação foram tomadas e por quê?
 - **R (Resultado):** Quais foram os ganhos quantitativos em horas economizadas, redução de custos bancários e acurácia contábil?
 
 ### 1.3. A Demanda Corporativa por "Desenvolvedores de Automação Financeira"
-As empresas clientes que contratam a [removido] para posições híbridas de automação financeira (mesclando Power Platform, Python e Dados) geralmente vivem um dilema crônico:
+As empresas que contratam posições híbridas de automação financeira (mesclando Power Platform, Python e Dados) geralmente vivem um dilema crônico:
 * A equipe interna de TI está sobrecarregada com grandes projetos de ERP (SAP S/4HANA, TOTVS, Oracle Cloud) e backlog de anos.
 * A área de Finanças e Tesouraria depende de dezenas de planilhas Excel cheias de macros VBA obsoletas e frágeis, que travam o fechamento contábil.
 * O cliente busca um **"Financial Automation Business Partner"**: alguém com senioridade suficiente para entender Débito, Crédito, Extratos Bancários, Prazos de Liquidação e Riscos Contábeis, capaz de desenhar e entregar a automação ponta a ponta sem demandar suporte constante da TI corporativa.
@@ -174,9 +174,9 @@ O projeto construído no repositório transcende o escopo de um teste técnico p
 
 ---
 
-## 4. O DICIONÁRIO DE NEGÓCIOS E KPIS FINANCEIROS QUE ENCANTAM A LIDERANÇA DA [REMOVIDO] E O CLIENTE FINAL
+## 4. O DICIONÁRIO DE NEGÓCIOS E KPIS FINANCEIROS QUE ENCANTAM A LIDERANÇA E O CLIENTE FINAL
 
-Para ser percebido como um profissional estratégico de alto escalão pela [removido], o candidato Diego deve substituir terminologias estritamente técnicas por **linguagem financeira orientada a valor**:
+Para ser percebido como um profissional estratégico de alto escalão, o candidato Diego deve substituir terminologias estritamente técnicas por **linguagem financeira orientada a valor**:
 
 ```
  ❌ O QUE O PROGRAMADOR COMUM FALA             ✅ O QUE O CONSULTOR DE VALOR (DIEGO) DEVE FALAR
@@ -255,10 +255,10 @@ xychart-beta
 
 ---
 
-## 5. ROTEIRO PRÁTICO E SCRIPTS DE RESPOSTA PARA A ENTREVISTA DA [REMOVIDO]
+## 5. ROTEIRO PRÁTICO E SCRIPTS DE RESPOSTA PARA A ENTREVISTA TÉCNICA
 
 ### 5.1. O "Elevator Pitch" Executivo (2 Minutos de Abertura)
-Quando o consultor da [removido] ou o gestor técnico disser:  
+Quando o consultor ou o gestor técnico disser:  
 *“Diego, nos conte um pouco sobre sua trajetória e como você pensou esse case de conciliação bancária”*, responda:
 
 > *“Muito obrigado. Ao analisar o desafio de conciliação em uma empresa de Viagens Corporativas com 8 contas bancárias, minha preocupação inicial não foi apenas tecnológica, mas sim o impacto financeiro no caixa da empresa.*
@@ -277,7 +277,7 @@ Quando o consultor da [removido] ou o gestor técnico disser:
 ---
 
 ### 5.2. Como Defender com Maestria os Gaps Técnicos Tácitos
-A [removido] valoriza candidatos que não hesitam e demonstram maturidade ao tratar eventuais gaps de ferramentas proprietárias.
+Bons avaliadores valorizam candidatos que não hesitam e demonstram maturidade ao tratar eventuais gaps de ferramentas proprietárias.
 
 #### Pergunta: *"Diego, notamos que seu forte é Python e SQL, mas a vaga cita Power Automate e Power Query. Você domina essas ferramentas no mesmo nível?"*
 
@@ -315,7 +315,7 @@ A [removido] valoriza candidatos que não hesitam e demonstram maturidade ao tra
 
 ## 6. SÍNTESE FINAL E RECOMENDAÇÃO DE POSICIONAMENTO
 
-A liderança de recrutamento da [removido] busca profissionais que entreguem **segurança psicológica e operacional para o cliente final**. Quando um candidato demonstra que domina a engenharia de software, mas pensa como um controller e age como um consultor de negócios, a contratação deixa de ser uma aposta técnica e passa a ser uma decisão estratégica indispensável.
+A liderança de recrutamento busca profissionais que entreguem **segurança psicológica e operacional para o cliente final**. Quando um candidato demonstra que domina a engenharia de software, mas pensa como um controller e age como um consultor de negócios, a contratação deixa de ser uma aposta técnica e passa a ser uma decisão estratégica indispensável.
 
 O projeto apresentado por Diego Luiz Lino de Aquino possui **todos os atributos exigidos para classificação no mais alto percentil de aprovação**:
 1. Código limpo, desacoplado, modular e extensivamente documentado.
@@ -323,4 +323,4 @@ O projeto apresentado por Diego Luiz Lino de Aquino possui **todos os atributos 
 3. Demonstração prática e funcional de todas as ferramentas requeridas na vaga.
 4. ROI e justificativa financeira irrefutáveis.
 
-**Diego está plenamente preparado para liderar a conversa de negócios, encantar a banca avaliadora da [removido] e garantir sua aprovação.**
+**Diego está plenamente preparado para liderar a conversa de negócios, encantar a banca avaliadora e garantir sua aprovação.**

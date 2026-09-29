@@ -1,7 +1,7 @@
 # 🎯 GUIA EXECUTIVO DE ENTREVISTA (1 PÁGINA)
 ## Case Técnico: Automação de Conciliação Bancária & IA Cognitiva
-**Candidato:** Diego Luiz Lino de Aquino | **Vaga:** Desenvolvedor de Automação  
-**Empresa Alvo:** Viagens Corporativas (8 Contas Bancárias) | **Data da Entrevista:** 22/09/2026, 14h-17h (SP)  
+**Candidato:** Diego Luiz Lino de Aquino | **Perfil:** Desenvolvedor de Automação  
+**Cenário:** Viagens Corporativas (8 Contas Bancárias) | **Data da Entrevista:** 22/09/2026, 14h-17h (SP)  
 
 ---
 
@@ -72,7 +72,7 @@ Durante a entrevista, mostre maturidade demonstrando como a arquitetura antecipa
 - **Armadilhas de Viagens Corporativas:**
   - *Faturamento Consolidado BSP/IATA:* Comparação de faturas quinzenais agregadas contra e-tickets individuais.
   - *No-Show e Cancelamento de Hotéis:* Reconhecimento de retenção de 1ª diária como divergência aceitável sem falso alerta de fraude.
-- **Validação Automatizada:** Bateria de testes funcionais disponível em `.agents/skills/analise-gargalos-conciliacao/scripts/test_gargalos_resiliencia.py`.
+- **Validação Automatizada:** Bateria de testes funcionais disponível em `tests/test_gargalos_resiliencia.py`.
 
 ---
 **Diego Luiz Lino de Aquino** | 📧 diaquinotech@gmail.com | 📱 [removido] | 🔗 linkedin.com/in/diegoaquino87

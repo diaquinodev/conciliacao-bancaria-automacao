@@ -3,7 +3,7 @@
 **Candidato:** Diego Luiz Lino de Aquino  
 **Agente Responsável:** Agent 4 - Engenheiro Power Automate (Especialista em Power Platform, Cloud Flows & Workflows)  
 **Data:** 2026-09-21  
-**Arquivo de Importação:** `DOCUMENTACAO_FINAL/flow.json`  
+**Arquivo de Importação:** `docs/flow.json`  
 
 ---
 
@@ -50,7 +50,7 @@ flowchart TD
 | ID | Nome da Ação | Tipo de Conector | Configuração / Parâmetro Chave | Política de Resiliência |
 | :---: | :--- | :--- | :--- | :--- |
 | **TRG** | `Recurrence_Diaria_0700_AM` | Scheduled Recurrence | Intervalo: 1 Dia às 07:00 (Fuso Brasília) | SLA Garantido |
-| **01** | `1_Executar_Script_Python_Extracao` | On-Premises / Script Runner | `python extrator_bancario.py --dias 1` | Retry Exponencial 3x (10s a 2min), Timeout 5m |
+| **01** | `1_Executar_Script_Python_Extracao` | On-Premises / Script Runner | `python src/extrator_bancario.py --dias 1` | Retry Exponencial 3x (10s a 2min), Timeout 5m |
 | **02** | `2_Carregar_Power_Query_Transformacao`| Power BI Dataflow | `ExecuteDataflow` (df-conciliacao-viagens) | Fixed Retry 2x (1min) |
 | **03** | `3_Executar_SQL_Validacao` | SQL Server | `SP_DETECTAR_DISCREPANCIAS` (@DIAS_ATRAS=1) | Retry Exponencial 3x (15s) |
 | **04** | `4_Obter_Discrepancias_SQL` | SQL Server Query | `SELECT ... FOR JSON AUTO` | Timeout 30s |

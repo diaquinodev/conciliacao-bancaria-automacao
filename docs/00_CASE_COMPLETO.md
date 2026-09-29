@@ -1,5 +1,5 @@
 # 🏦 CASE PRÁTICO: Automação de Conciliação Bancária & Fluxo de Caixa
-## Desenvolvedor de Automação | Viagens Corporativas
+## Case técnico de automação bancária | Viagens Corporativas
 
 ---
 
@@ -848,6 +848,6 @@ Diego Luiz Lino de Aquino
 
 ---
 
-**Documento preparado para: [removido] - Desenvolvedor de Automação**
+**Documento de apresentação do case técnico de automação bancária**
 **Data: 21 de Setembro de 2026**
 **Status: PRONTO PARA APRESENTAÇÃO**

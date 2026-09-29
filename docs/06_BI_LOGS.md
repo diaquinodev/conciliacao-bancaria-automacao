@@ -3,7 +3,7 @@
 **Candidato:** Diego Luiz Lino de Aquino  
 **Agente Responsável:** Agent 6 - Engenheiro BI & Observabilidade (Especialista em Power BI, Logging & Telemetria)  
 **Data:** 2026-09-21  
-**Arquivo de Especificação:** `DOCUMENTACAO_FINAL/dashboard_spec.json`  
+**Arquivo de Especificação:** `docs/dashboard_spec.json`  
 
 ---
 

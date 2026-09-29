@@ -56,13 +56,13 @@ Como Orquestrador Principal do sistema de automação, revisei os outputs e arte
 
 ```powershell
 # 1. Executar a extração bancária multbancária:
-python extrator_bancario.py
+python src/extrator_bancario.py
 
 # 2. Executar a análise de inteligência artificial com Claude:
-python claude_integration.py
+python src/claude_integration.py
 
 # 3. Validar a integridade sintática dos JSONs gerados:
-python -c "import json, glob; [json.load(open(f, encoding='utf-8')) for f in glob.glob('DOCUMENTACAO_FINAL/*.json')]; print('Todos os arquivos JSON em DOCUMENTACAO_FINAL são 100% válidos!')"
+python -c "import json, glob; [json.load(open(f, encoding='utf-8')) for f in glob.glob('docs/*.json')]; print('Todos os arquivos JSON em docs/ são 100% válidos!')"
 ```
 
 ---
@@ -74,4 +74,4 @@ python -c "import json, glob; [json.load(open(f, encoding='utf-8')) for f in glo
 - **Timestamp Fim:** 2026-09-21T16:45:00-03:00
 - **Duração Estimada:** 4 minutos
 - **Resultado da Auditoria Integrada:** APROVADO COM LOUVOR
-- **Pronto para a Entrevista da [removido]:** SIM (100%)
+- **Pronto para a apresentação do case:** SIM (100%)

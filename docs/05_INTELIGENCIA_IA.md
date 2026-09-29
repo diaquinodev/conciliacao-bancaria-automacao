@@ -3,7 +3,7 @@
 **Candidato:** Diego Luiz Lino de Aquino  
 **Agente Responsável:** Agent 5 - Engenheiro IA (Especialista em Integrações LLM, Prompt Engineering & NLP Financeiro)  
 **Data:** 2026-09-21  
-**Arquivo Executável:** `DOCUMENTACAO_FINAL/claude_integration.py` e `claude_integration.py`  
+**Arquivo Executável:** `src/claude_integration.py`  
 
 ---
 

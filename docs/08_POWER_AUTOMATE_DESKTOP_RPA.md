@@ -2,7 +2,7 @@
 ## Extração de Extratos Legados via Internet Banking (OFX / CNAB 240)
 
 **Candidato:** Diego Luiz Lino de Aquino  
-**Vaga:** Desenvolvedor de Automação  
+**Perfil:** Desenvolvedor de Automação  
 **Contexto:** Contingência para Instituições Financeiras ou Portais de Viagens sem API REST
 
 ---

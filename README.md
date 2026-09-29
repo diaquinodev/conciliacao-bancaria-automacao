@@ -4,11 +4,11 @@
 
 [![Python](https://img.shields.io/badge/Python-3.12%20%7C%203.13-3776AB?logo=python&logoColor=white)](requirements.txt)
 [![Testes](https://img.shields.io/badge/testes-30%20aprovados-brightgreen?logo=githubactions&logoColor=white)](.github/workflows/ci.yml)
-[![SQL Server](https://img.shields.io/badge/SQL%20Server-T--SQL-CC2927?logo=microsoftsqlserver&logoColor=white)](conciliacao_bancaria.sql)
-[![Power Platform](https://img.shields.io/badge/Power%20Automate%20%2B%20Power%20Query-742774?logo=powerautomate&logoColor=white)](DOCUMENTACAO_FINAL/04_POWER_AUTOMATE.md)
+[![SQL Server](https://img.shields.io/badge/SQL%20Server-T--SQL-CC2927?logo=microsoftsqlserver&logoColor=white)](src/conciliacao_bancaria.sql)
+[![Power Platform](https://img.shields.io/badge/Power%20Automate%20%2B%20Power%20Query-742774?logo=powerautomate&logoColor=white)](docs/04_POWER_AUTOMATE.md)
 [![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-blue)](LICENSE)
 
-**Case técnico — Desenvolvedor de Automação �**
+**Case técnico de automação bancária**
 **Autor:** Diego Luiz Lino de Aquino · [diaquinotech@gmail.com](mailto:diaquinotech@gmail.com) · [LinkedIn](https://linkedin.com/in/diegoaquino87)
 
 ---
@@ -42,19 +42,19 @@ flowchart LR
 
 | Camada | Arquivo | O que faz |
 | :--- | :--- | :--- |
-| **Extração** | [`extrator_bancario.py`](extrator_bancario.py) | OAuth 2.0 por banco, *Circuit Breaker* (CLOSED → OPEN → HALF_OPEN), *exponential backoff* com jitter para 429/5xx, validação de schema e logs JSON com `correlation_id`. Sem credenciais, opera em **modo demo** com massa sintética realista. |
-| **Transformação** | [`etl_power_query.m`](etl_power_query.m) | `Table.Buffer`, deduplicação pela mesma chave do SQL, tipagem monetária, categoria de despesa e sinal contábil (débito negativo). |
-| **Persistência** | [`conciliacao_bancaria.sql`](conciliacao_bancaria.sql) | Tabelas com `DECIMAL(15,2)` e `UNIQUE(ID_EXTERNO, BANCO, CONTA)`, views para o BI, trilha de auditoria e a *stored procedure* `SP_DETECTAR_DISCREPANCIAS`. |
-| **Inteligência** | [`claude_integration.py`](claude_integration.py) | Envia apenas as discrepâncias (não o extrato inteiro) à Claude API e devolve causa provável, risco e ação. Sem `ANTHROPIC_API_KEY`, usa um motor heurístico determinístico. |
-| **Orquestração** | [`flow.json`](DOCUMENTACAO_FINAL/flow.json) · [RPA](DOCUMENTACAO_FINAL/08_POWER_AUTOMATE_DESKTOP_RPA.md) | Gatilho diário, padrão assíncrono *202 Accepted*, alerta ao CFO e Teams; robô desktop para bancos sem API. |
-| **Entrega** | [`gerar_dashboard_interativo.py`](gerar_dashboard_interativo.py) · [`enviar_email_real.py`](enviar_email_real.py) | Painel HTML com filtros e relatório executivo por e-mail (SMTP/TLS) com câmbio e Selic ao vivo. |
+| **Extração** | [`src/extrator_bancario.py`](src/extrator_bancario.py) | OAuth 2.0 por banco, *Circuit Breaker* (CLOSED → OPEN → HALF_OPEN), *exponential backoff* com jitter para 429/5xx, validação de schema e logs JSON com `correlation_id`. Sem credenciais, opera em **modo demo** com massa sintética realista. |
+| **Transformação** | [`src/etl_power_query.m`](src/etl_power_query.m) | `Table.Buffer`, deduplicação pela mesma chave do SQL, tipagem monetária, categoria de despesa e sinal contábil (débito negativo). |
+| **Persistência** | [`conciliacao_bancaria.sql`](src/conciliacao_bancaria.sql) | Tabelas com `DECIMAL(15,2)` e `UNIQUE(ID_EXTERNO, BANCO, CONTA)`, views para o BI, trilha de auditoria e a *stored procedure* `SP_DETECTAR_DISCREPANCIAS`. |
+| **Inteligência** | [`src/claude_integration.py`](src/claude_integration.py) | Envia apenas as discrepâncias (não o extrato inteiro) à Claude API e devolve causa provável, risco e ação. Sem `ANTHROPIC_API_KEY`, usa um motor heurístico determinístico. |
+| **Orquestração** | [`flow.json`](docs/flow.json) · [RPA](docs/08_POWER_AUTOMATE_DESKTOP_RPA.md) | Gatilho diário, padrão assíncrono *202 Accepted*, alerta ao CFO e Teams; robô desktop para bancos sem API. |
+| **Entrega** | [`src/gerar_dashboard_interativo.py`](src/gerar_dashboard_interativo.py) · [`src/enviar_email_real.py`](src/enviar_email_real.py) | Painel HTML com filtros e relatório executivo por e-mail (SMTP/TLS) com câmbio e Selic ao vivo. |
 
 ## 📏 Regras de negócio implementadas
 
 | Regra | Onde | Comportamento |
 | :--- | :--- | :--- |
 | **Teto de alçada** | SQL · IA · painel · e-mail | Lançamento acima de **R$ 100.000,00** vira discrepância, risco **Alto** e exige aprovação do CFO — inclusive se também for duplicata. |
-| **Idempotência** | [`executar_esteira_ao_vivo.py`](executar_esteira_ao_vivo.py) | SHA-256 de `banco \| conta \| data \| valor(2 casas) \| descrição normalizada`. Reprocessar o mesmo lote **não duplica saldo**. |
+| **Idempotência** | [`src/executar_esteira_ao_vivo.py`](src/executar_esteira_ao_vivo.py) | SHA-256 de `banco \| conta \| data \| valor(2 casas) \| descrição normalizada`. Reprocessar o mesmo lote **não duplica saldo**. |
 | **Duplicata potencial** | `SP_DETECTAR_DISCREPANCIAS` | Mesmo banco, conta, valor e dia. Mantém as duas marcações quando a duplicata também estoura o teto. |
 | **Outlier estatístico** | `SP_DETECTAR_DISCREPANCIAS` | Valor acima de média + 2σ dos últimos 90 dias (mínimo de 10 amostras por banco). |
 | **Qualidade de dados** | `ExtratorBancario.validar_dados` | Mede a taxa de erro do lote: campos obrigatórios nulos, valor ≤ 0 e banco fora dos 8 suportados. |
@@ -100,12 +100,25 @@ KPIs, gráficos e extrato recalculam no navegador.
 </details>
 
 ### 🎞️ Apresentação
-Deck de 5 slides: [**PDF**](docs/apresentacao/apresentacao_case_conciliacao.pdf) · versão interativa em [`fluxograma_apresentacao.html`](fluxograma_apresentacao.html) (use ← →).
+Deck de 5 slides: [**PDF**](docs/apresentacao/apresentacao_case_conciliacao.pdf) · versão interativa em [`fluxograma_apresentacao.html`](docs/apresentacao/fluxograma_apresentacao.html) (use ← →).
 
 | | | |
 | :---: | :---: | :---: |
 | ![Slide 1](docs/img/slides/slide_01.png) | ![Slide 2](docs/img/slides/slide_02.png) | ![Slide 3](docs/img/slides/slide_03.png) |
 | ![Slide 4](docs/img/slides/slide_04.png) | ![Slide 5](docs/img/slides/slide_05.png) | |
+
+## 📚 Documentação
+
+O dossiê técnico completo está em [`docs/`](docs/README.md):
+
+| Documento | Conteúdo |
+| :--- | :--- |
+| [Índice do dossiê](docs/README.md) | Visão geral e lista de todos os documentos |
+| [Requisitos](docs/01_REQUISITOS_ANALISE.md) · [Arquitetura](docs/02_ARQUITETURA_DESIGN.md) | Análise e desenho da solução |
+| [Código Python](docs/03_CODIGO_PYTHON.md) · [Power Automate](docs/04_POWER_AUTOMATE.md) · [IA](docs/05_INTELIGENCIA_IA.md) · [BI e logs](docs/06_BI_LOGS.md) | Camadas da esteira |
+| [Harness final](docs/07_HARNESS_FINAL.md) · [RPA desktop](docs/08_POWER_AUTOMATE_DESKTOP_RPA.md) | Validação ponta a ponta e contingência |
+| [Alinhamento de negócio](docs/09_ALINHAMENTO_NEGOCIO.md) · [Engenharia de dados](docs/10_DOCUMENTACAO_ENGENHARIA_DADOS.md) | Business case e decisões (ADRs) |
+| [Case completo](docs/00_CASE_COMPLETO.md) · [Resumo executivo](docs/RESUMO_EXECUTIVO.md) · [Guia de apresentação](docs/GUIA_APRESENTACAO.md) | Material de apresentação |
 
 ## 🚀 Como executar
 
@@ -120,28 +133,28 @@ copy .env.example .env                               # opcional: sem ele tudo ro
 
 | Comando | O que mostra |
 | :--- | :--- |
-| `python demo_executiva.py` | Extração dos 8 bancos → regras → diagnóstico de risco (≈3 s) |
-| `python executar_esteira_ao_vivo.py` | SQLite idempotente + câmbio/Selic ao vivo + painel; envia e-mail se `SMTP_PASSWORD` estiver no `.env` |
-| `python executar_sql_demo.py` | Cria o banco local e executa as queries de auditoria |
-| `python gerar_dashboard_interativo.py` | Regenera `dashboard_demonstracao.html` a partir de `transacoes_brutas.json` |
+| `python src/demo_executiva.py` | Extração dos 8 bancos → regras → diagnóstico de risco (≈3 s) |
+| `python src/executar_esteira_ao_vivo.py` | SQLite idempotente + câmbio/Selic ao vivo + painel; envia e-mail se `SMTP_PASSWORD` estiver no `.env` |
+| `python src/executar_sql_demo.py` | Cria o banco local e executa as queries de auditoria |
+| `python src/gerar_dashboard_interativo.py` | Regenera `dashboard_demonstracao.html` a partir de `transacoes_brutas.json` |
 
 > `demo_executiva.py` gera uma nova massa sintética a cada execução e sobrescreve `transacoes_brutas.json`. Para voltar à massa de referência dos testes e prints: `git checkout transacoes_brutas.json transacoes_brutas.csv`.
 
 ## 🧪 Testes
 
 ```bash
-python -m unittest test_extrator_bancario.py -v
-python test_dashboard_integridade.py
-python .agents/skills/analise-gargalos-conciliacao/scripts/test_gargalos_resiliencia.py
-python test_regras_negocio.py
+python -m unittest tests/test_extrator_bancario.py -v
+python tests/test_dashboard_integridade.py
+python tests/test_gargalos_resiliencia.py
+python tests/test_regras_negocio.py
 ```
 
 | Suíte | Testes | Cobre |
 | :--- | :---: | :--- |
-| `test_extrator_bancario.py` | 7 | Circuit Breaker, 8 bancos, schema, validação |
-| `test_dashboard_integridade.py` | 13 | Totais, categorias, paginação e dados embutidos no painel |
-| `test_gargalos_resiliencia.py` | 4 | Idempotência, rate limit, armadilhas de [removido] e equilíbrio contábil |
-| `test_regras_negocio.py` | 6 | Precedência do teto de alçada, hash normalizado, XSS no painel, e-mail com dados reais |
+| `tests/test_extrator_bancario.py` | 7 | Circuit Breaker, 8 bancos, schema, validação |
+| `tests/test_dashboard_integridade.py` | 13 | Totais, categorias, paginação e dados embutidos no painel |
+| `tests/test_gargalos_resiliencia.py` | 4 | Idempotência, rate limit, armadilhas de [removido] e equilíbrio contábil |
+| `tests/test_regras_negocio.py` | 6 | Precedência do teto de alçada, hash normalizado, XSS no painel, e-mail com dados reais |
 
 Todas rodam no [GitHub Actions](.github/workflows/ci.yml) em Python 3.12 e 3.13.
 
@@ -157,13 +170,13 @@ Todas rodam no [GitHub Actions](.github/workflows/ci.yml) em Python 3.12 e 3.13.
 ## ⚖️ Decisões técnicas e limitações conhecidas
 
 - **Modo demo por padrão.** Sem credenciais bancárias reais, o extrator gera transações sintéticas realistas (passagens, hotéis, transfers, seguros e um fretamento acima do teto de vez em quando). O caminho REST real está implementado e é ativado quando os `*_CLIENT_ID`/`*_CLIENT_SECRET` existem no `.env`.
-- **SQLite na demo, SQL Server no desenho alvo.** Os scripts locais usam SQLite para rodar sem infraestrutura; o [`conciliacao_bancaria.sql`](conciliacao_bancaria.sql) é o modelo T-SQL de produção (com `DECIMAL` para valores monetários).
+- **SQLite na demo, SQL Server no desenho alvo.** Os scripts locais usam SQLite para rodar sem infraestrutura; o [`conciliacao_bancaria.sql`](src/conciliacao_bancaria.sql) é o modelo T-SQL de produção (com `DECIMAL` para valores monetários).
 - **Chave idempotente por conteúdo.** Duas compras legítimas idênticas (mesmo banco, conta, segundo, valor e descrição) seriam tratadas como uma só. Com as APIs reais, a chave deve priorizar o identificador único do banco (`id_externo`).
 - **Extração sequencial.** Os 8 bancos são consultados em sequência. Para escalar, o próximo passo é paralelizar com limite de concorrência por banco, respeitando o rate limit de cada um.
 
 ## 📊 Business case (estimativas)
 
-Premissas e cálculo em [`09_ALINHAMENTO_NEGOCIO.md`](DOCUMENTACAO_FINAL/09_ALINHAMENTO_NEGOCIO.md).
+Premissas e cálculo em [`09_ALINHAMENTO_NEGOCIO.md`](docs/09_ALINHAMENTO_NEGOCIO.md).
 
 | Indicador | Antes | Depois (estimado) |
 | :--- | :---: | :---: |
@@ -174,24 +187,22 @@ Premissas e cálculo em [`09_ALINHAMENTO_NEGOCIO.md`](DOCUMENTACAO_FINAL/09_ALIN
 ## 📁 Estrutura
 
 ```
-├── extrator_bancario.py            # Extração resiliente dos 8 bancos
-├── claude_integration.py           # Diagnóstico de discrepâncias (Claude API + fallback)
-├── etl_power_query.m               # ETL em linguagem M (Power BI / Excel)
-├── conciliacao_bancaria.sql        # Modelo T-SQL, views e SP de discrepâncias
-├── executar_esteira_ao_vivo.py     # Esteira local: SQLite idempotente, APIs públicas, painel, e-mail
-├── executar_sql_demo.py            # Demonstração das regras SQL em banco local
-├── demo_executiva.py               # Demo ponta a ponta no terminal
-├── enviar_email_real.py            # Relatório executivo via SMTP/TLS
-├── gerar_dashboard_interativo.py   # Gera o painel HTML
-├── dashboard_demonstracao.html     # Painel executivo (abra no navegador)
-├── fluxograma_apresentacao.html    # Apresentação interativa
-├── transacoes_brutas.{json,csv}    # Massa de referência (216 transações)
-├── test_*.py                       # Testes automatizados
-├── docs/
-│   ├── img/                        # Prints da solução funcionando
-│   └── apresentacao/               # Deck em PDF
-├── DOCUMENTACAO_FINAL/             # Dossiê técnico por camada + flow.json + spec do Power BI
-└── .github/workflows/ci.yml        # Pipeline de testes
+├── src/
+│   ├── extrator_bancario.py            # Extração resiliente dos 8 bancos
+│   ├── claude_integration.py           # Diagnóstico de discrepâncias (Claude API + fallback)
+│   ├── etl_power_query.m               # ETL em linguagem M (Power BI / Excel)
+│   ├── conciliacao_bancaria.sql        # Modelo T-SQL, views e SP de discrepâncias
+│   ├── executar_esteira_ao_vivo.py     # Esteira local: SQLite idempotente, APIs públicas, painel, e-mail
+│   ├── executar_sql_demo.py            # Demonstração das regras SQL em banco local
+│   ├── demo_executiva.py               # Demo ponta a ponta no terminal
+│   ├── enviar_email_real.py            # Relatório executivo via SMTP/TLS
+│   └── gerar_dashboard_interativo.py   # Gera o painel HTML
+├── tests/                              # Testes automatizados (30)
+├── docs/                               # Dossiê técnico, flow.json, spec do Power BI, imagens e apresentação
+├── dashboard_demonstracao.html         # Painel executivo (abra no navegador)
+├── transacoes_brutas.{json,csv}        # Massa de referência (216 transações)
+├── feedback_loop_historico.json        # Histórico de diagnósticos da IA
+└── .github/workflows/ci.yml            # Pipeline de testes
 ```
 
 ## 📄 Licença

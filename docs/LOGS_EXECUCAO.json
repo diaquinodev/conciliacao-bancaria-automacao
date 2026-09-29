@@ -50,7 +50,7 @@
       "status": "concluido",
       "duracao_min": 4,
       "agente": "Orquestrador Principal",
-      "artefato": "07_HARNESS_FINAL.md, MATERIAL_ENTREVISTA.md"
+      "artefato": "07_HARNESS_FINAL.md, MATERIAL_APRESENTACAO.md"
     }
   ],
   "duracao_total_min": 65,
@@ -69,5 +69,5 @@
     "Medir e comparar a telemetria e o SLA de processamento de cada layer diariamente"
   ],
   "pronto_para_entrevista": true,
-  "material_impresso": "MATERIAL_ENTREVISTA.md (1 página)"
+  "material_impresso": "MATERIAL_APRESENTACAO.md (1 página)"
 }
