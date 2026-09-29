@@ -2,7 +2,7 @@
 // SCRIPT M - POWER QUERY ETL: CONCILIAÇÃO BANCÁRIA CORPORATIVA
 // Compatível com: Power BI Desktop / Excel Power Query (Editor Avançado)
 // Autor: Diego Luiz Lino de Aquino (diaquinotech@gmail.com)
-// Contexto: Processo Seletivo - Desenvolvedor de Automação
+// Contexto: case técnico de automação bancária
 //
 // Entrada: transacoes_brutas.json gerado por extrator_bancario.py
 // Contrato: id_externo, banco, conta, data_transacao, valor, descricao, tipo,

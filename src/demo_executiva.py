@@ -1,5 +1,5 @@
 """DEMONSTRAÇÃO EXECUTIVA END-TO-END: CONCILIAÇÃO BANCÁRIA & AUDITORIA DE FECHAMENTO
-Script preparado para apresentação técnica na entrevista da [removido].
+Script de apresentação técnica do case de automação bancária.
 Candidato: Diego Luiz Lino de Aquino (diaquinotech@gmail.com)
 Data: 2026-09-21 / 2026-09-22
 """

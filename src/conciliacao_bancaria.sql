@@ -1,6 +1,6 @@
 -- =============================================================================
 -- BANCO DE DADOS: CONCILIACAO_BANCARIA (SQL SERVER / AZURE SQL)
--- Case Técnico: Desenvolvedor de Automação
+-- Case técnico de automação bancária
 -- Candidato: Diego Luiz Lino de Aquino
 -- Data: 2026-09-21
 -- =============================================================================

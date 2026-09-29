@@ -5,7 +5,7 @@ Validação de Dados Reais, Filtros Front-End, Paginação e Elementos DOM
 ==============================================================================
 Autor: Diego Luiz Lino de Aquino (diaquinotech@gmail.com)
 Data: 2026-09-22
-Contexto: Processo Seletivo - Desenvolvedor de Automação
+Contexto: case técnico de automação bancária
 """
 
 import os

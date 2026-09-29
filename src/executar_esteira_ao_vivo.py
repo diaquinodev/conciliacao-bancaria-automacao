@@ -1,7 +1,7 @@
 """
 ==============================================================================
 ESTEIRA COMPLETA DE CONCILIAÇÃO BANCÁRIA - EXECUÇÃO AO VIVO
-Demonstração Hands-on para Entrevista Técnica
+Demonstração hands-on do case técnico de automação bancária
 ==============================================================================
 Autor: Diego Luiz Lino de Aquino (diaquinotech@gmail.com)
 Data: 2026-09-22
@@ -298,7 +298,7 @@ def etapa_5_enviar_email_executivo(total_gasto, categorias, bancos, dados_mercad
         </div>
         <div class="footer">
           Candidato: <strong>Diego Luiz Lino de Aquino</strong> &bull; diaquinotech@gmail.com &bull; [removido]<br>
-          Case Técnico: Desenvolvedor de Automação &bull; 22/09/2026
+          Case técnico de automação bancária &bull; 22/09/2026
         </div>
       </div>
     </body>
@@ -326,7 +326,7 @@ def etapa_5_enviar_email_executivo(total_gasto, categorias, bancos, dados_mercad
 if __name__ == "__main__":
     print("\n" + "#"*75)
     print(" INICIANDO EXECUÇÃO AO VIVO DA ESTEIRA DE CONCILIAÇÃO BANCÁRIA")
-    print(" Candidato: Diego Luiz Lino de Aquino")
+    print(" Autor: Diego Luiz Lino de Aquino")
     print("#"*75)
 
     # 1. Extração e Idempotência

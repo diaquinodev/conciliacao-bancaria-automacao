@@ -68,7 +68,7 @@
   },
   {
     "timestamp": "2026-09-21T16:05:27.425800",
-    "correlation_id": "DEMO-PROCESSO-2026",
+    "correlation_id": "DEMO-CASE-2026",
     "entrada": [
       {
         "id": "TX_INTER_CRITICO_015050",
@@ -117,7 +117,7 @@
   },
   {
     "timestamp": "2026-09-21T16:09:43.737803",
-    "correlation_id": "DEMO-PROCESSO-2026",
+    "correlation_id": "DEMO-CASE-2026",
     "entrada": [
       {
         "id": "TX_BRADESCO_CRITICO_9841FC",

@@ -6,7 +6,7 @@ exponencial, validação rígida de schemas e telemetria estruturada em JSON.
 
 Autor: Diego Luiz Lino de Aquino
 Data: 2026-09-21
-Contexto: Processo Seletivo - Desenvolvedor de Automação
+Contexto: case técnico de automação bancária
 """
 
 from __future__ import annotations

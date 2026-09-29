@@ -1,6 +1,6 @@
 """
 Gerador do Dashboard Executivo Interativo com Filtros de Gastos, Datas e Bancos
-Compatível com exibição offline no navegador ([removido] Theme)
+Compatível com exibição offline no navegador (tema corporativo)
 """
 
 import json
@@ -229,7 +229,7 @@ def compilar_dashboard():
     <!-- HEADER -->
     <header class="header">
       <div class="header-brand">
-        <span class="brand-mark">[REMOVIDO]</span>
+        <span class="brand-mark">CONCILIAÇÃO</span>
         <div class="header-title">
           <h1>Painel de Gestão e Conciliação Financeira</h1>
           <p>Esteira Automatizada de Tesouraria Multibancária &bull; Viagens Corporativas</p>
@@ -385,7 +385,7 @@ def compilar_dashboard():
         [removido]
       </div>
       <div>
-        Processo Seletivo: <strong>Desenvolvedor de Automação</strong> &bull; 22/09/2026
+        Case técnico de automação bancária &bull; 22/09/2026
       </div>
     </footer>
   </div>

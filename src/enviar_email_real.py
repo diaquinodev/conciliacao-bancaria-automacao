@@ -238,7 +238,7 @@ def gerar_relatorio_html(dados_mercado, resumo_bancos):
 
         <div class="footer">
           Candidato: <strong>Diego Luiz Lino de Aquino</strong> &bull; <a href="mailto:diaquinotech@gmail.com" style="color: #bd1023; text-decoration: none;">diaquinotech@gmail.com</a><br>
-          Case Técnico: Desenvolvedor de Automação &bull; 22/09/2026
+          Case técnico de automação bancária &bull; 22/09/2026
         </div>
       </div>
     </body>
