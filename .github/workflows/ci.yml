@@ -30,16 +30,16 @@ jobs:
 
       - name: 1. Executar Testes Unitários do Extrator (Circuit Breaker & Backoff)
         run: |
-          python -m unittest test_extrator_bancario.py -v
+          python -m unittest tests/test_extrator_bancario.py -v
 
       - name: 2. Executar Testes de Integridade de Dados & Dashboard (13 Testes)
         run: |
-          python test_dashboard_integridade.py
+          python tests/test_dashboard_integridade.py
 
       - name: 3. Executar Testes de Resiliência e Armadilhas de Negócio (4 Testes)
         run: |
-          python .agents/skills/analise-gargalos-conciliacao/scripts/test_gargalos_resiliencia.py
+          python tests/test_gargalos_resiliencia.py
 
       - name: 4. Executar Testes de Regressão de Regras de Negócio & Segurança
         run: |
-          python test_regras_negocio.py
+          python tests/test_regras_negocio.py

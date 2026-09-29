@@ -17,6 +17,8 @@ from unittest.mock import patch
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))  # módulos da esteira ficam em src/
+
 import enviar_email_real
 import executar_esteira_ao_vivo
 import gerar_dashboard_interativo

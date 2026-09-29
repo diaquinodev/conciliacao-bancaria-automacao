@@ -10,6 +10,9 @@ Contexto: Processo Seletivo - Desenvolvedor de Automação
 
 import os
 import sys
+
+# Módulos da esteira ficam em src/ (execute os testes a partir da raiz do repositório)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
 import re
 import json
 import math
