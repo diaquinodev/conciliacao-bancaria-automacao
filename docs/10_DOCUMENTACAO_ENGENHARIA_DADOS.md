@@ -4,11 +4,10 @@
 ---
 
 ### Metadados do Projeto & Engenharia
-* **Autor:** Diego Luiz Lino de Aquino
-* **Cargo / Perfil Alvo:** Desenvolvedor de Automação & Engenheiro de Dados (Process Automation / Data Analytics)
-* **Avaliador:** Engenharia de Dados & Liderança Técnica
-* **Domínio de Aplicação:** Tesouraria Corporativa, Finanças e Viagens Corporativas (Corporate Travel)
-* **Status da Solução:** Homologada com 100% de cobertura de testes (Integridade de Dados & Resiliência a Falhas)
+* **Autor:** Diego Aquino
+* **Perfil:** Analista de Dados (automação, ETL e qualidade de dados)
+* **Domínio de Aplicação:** Tesouraria Corporativa, Finanças e Despesas Corporativas
+* **Status da Solução:** Projeto de portfólio com dados sintéticos; suíte de testes automatizados no CI (integridade de dados e resiliência a falhas)
 * **Padrões de Engenharia Adotados:** C4 Model, Architecture Decision Records (ADRs - Martin Fowler / Michael Nygard), Medallion Architecture (Bronze/Silver/Gold), Data Contracts, SOX 404 (Trilha de Auditoria WORM) e FinOps.
 
 ---
@@ -16,9 +15,9 @@
 ## 1. Executive Summary & TL;DR (Resumo Executivo)
 
 ### 1.1. O Problema de Negócio (Problem Statement)
-Em operações de grande porte no setor de viagens corporativas e tesouraria empresarial, a conciliação financeira entre os extratos de múltiplos bancos (Itaú, Bradesco, Banco do Brasil, Santander, Caixa, Inter, Sicredi, Safra) e o sistema ERP corporativo (SAP/Protheus) enfrenta 4 desafios críticos:
+Em operações de grande porte no setor de despesas corporativas e tesouraria empresarial, a conciliação financeira entre os extratos de múltiplos bancos (Itaú, Bradesco, Banco do Brasil, Santander, Caixa, Inter, Sicredi, Safra) e o sistema ERP corporativo (SAP/Protheus) enfrenta 4 desafios críticos:
 1. **Fragmentação de Fontes e Protocolos:** 8 instituições com formatos distintos (APIs REST/OAuth2, mTLS com certificados digitais, arquivos OFX, CNAB 240/400 e portais legados sem API).
-2. **Complexidade de Domínio (Viagens Corporativas):**
+2. **Complexidade de Domínio (Despesas Corporativas):**
    - **Faturas Consolidadas BSP/IATA:** Faturas de companhias aéreas faturadas em lote quinzenal (ex: R$ 850.000,00 contendo 400 e-tickets individuais), inviabilizando conciliação linha a linha sem agrupador.
    - **No-Show e Cancelamento de Hotelaria:** Retenção de 1 diária como multa e estorno parcial, gerando divergências que regras rígidas de igualdade ($Valor_{Extrato} == Valor_{ERP}$) não conseguem conciliar.
    - **Taxas DU / Fee de Agenciamento e IOF:** Pequenas variações de centavos decorrentes de arredondamentos cambiais e tarifas de intermediação.
@@ -28,21 +27,20 @@ Em operações de grande porte no setor de viagens corporativas e tesouraria emp
 ### 1.2. A Solução Entregue
 Uma **esteira híbrida de alta resiliência** que unifica a flexibilidade do **Python 3.13** para extração assíncrona, resiliência via Circuit Breaker e consumo de APIs externas (incluindo cotações ao vivo de moedas via AwesomeAPI e taxa Selic via BACEN SGS); a solidez do **SQL Server** para garantia transacional ACID e idempotência criptográfica (SHA-256); a facilidade de transformação do **Power Query (Linguagem M)** com bufferização de memória; a orquestração corporativa do **Power Automate**; um **Dashboard Interativo em HTML5/Chart.js** auditável em tempo real; e um motor de **Auditoria Cognitiva (Claude 3.5 Sonnet)** acionado estritamente sobre exceções para análise semântica de discrepâncias.
 
-### 1.3. Principais Métricas & Ganhos Comprovados
-* **Tempo de Processamento:** De ~4 horas manuais para **3,8 segundos** na esteira automatizada.
-* **Acurácia de Conciliação:** **99,87%** de conciliação automática determinística (Straight-Through Processing - STP).
-* **Volume do Case Demonstrativo:** **R$ 845.892,10** distribuídos em 8 contas correntes com auditoria de saldo centavo a centavo.
-* **Idempotência Garantida:** 0% de duplicação em reexecuções consecutivas (testado e comprovado via hash SHA-256).
-* **Eficiência de FinOps:** Redução de 99,8% no consumo de tokens LLM através do filtro SQL prévio de anomalias (custo < US$ 0,02 por execução).
+### 1.3. O que a demonstração mostra (dados sintéticos)
+* **Volume da massa de referência:** 216 transações sintéticas, somando **R$ 845.892,10**, distribuídas em 8 contas (`transacoes_brutas.json`).
+* **Idempotência:** reprocessar o mesmo lote não duplica registros (chave SHA-256; coberto por testes automatizados).
+* **Regras de qualidade:** teto de alçada, duplicata potencial e outlier estatístico, implementados no SQL e cobertos por testes.
+* **Observação:** os números de ganho de tempo, acurácia e custo que aparecem em cenários de escala (ex.: 50.000 transações/dia) neste documento são **estimativas ilustrativas**, não medições.
 
 ---
 
-## 2. Quickstart do Avaliador (Como Rodar e Validar em 2 Minutos)
+## 2. Quickstart (Como Rodar e Validar em 2 Minutos)
 
-O projeto foi construído sob o princípio de **Time-to-First-Value**: o engenheiro avaliador não precisa configurar bancos de dados complexos ou infraestruturas pesadas para validar a lógica ponta a ponta.
+O projeto foi construído sob o princípio de **Time-to-First-Value**: quem for validar não precisa configurar bancos de dados complexos ou infraestruturas pesadas para validar a lógica ponta a ponta.
 
 ### Passo 1: Executar a Esteira Completa ao Vivo
-Executa a extração dos 8 bancos, coleta câmbio/Selic em tempo real, aplica idempotência e conciliação em SQLite (espelho do T-SQL), categoriza despesas de viagens, gera o relatório executivo e envia e-mail TLS formatado:
+Executa a extração dos 8 bancos, coleta câmbio/Selic em tempo real, aplica idempotência e conciliação em SQLite (espelho do T-SQL), categoriza despesas, gera o relatório executivo e envia e-mail TLS formatado:
 ```powershell
 py -3.13 src/executar_esteira_ao_vivo.py
 ```
@@ -122,7 +120,7 @@ Adotamos a **Opção A**. O Python resolve com maestria o que o Low-Code não co
 
 #### Consequências & Trade-offs
 * **Vantagens (+):** TCO mínimo, execução ultrarrápida (menos de 4 segundos), conformidade com os padrões corporativos de TI e total governança.
-* **Trade-off assumido (-):** Para escalar para mais de 100 milhões de transações diárias em tempo real, seria necessário desacoplar o script Python em microsserviços orientados a eventos via Apache Kafka ou Azure Event Hubs. Para o domínio de tesouraria de viagens corporativas, a solução atual atende com 10x de margem de segurança.
+* **Trade-off assumido (-):** Para escalar para mais de 100 milhões de transações diárias em tempo real, seria necessário desacoplar o script Python em microsserviços orientados a eventos via Apache Kafka ou Azure Event Hubs. Para o domínio de tesouraria de despesas corporativas, a solução atual atende com 10x de margem de segurança.
 
 ---
 
@@ -263,7 +261,7 @@ Adotamos uma **Estratégia FinOps de Acionamento por Exceção (Exception-Based 
 2. Das 50.000 transações, **99,87% são conciliadas determinística e instantaneamente pelo SQL a custo computacional zero de IA**.
 3. Apenas o resíduo estatístico (~0,13%, correspondente a 10 a 30 transações com divergências semânticas ou no-show complexo) é encapsulado em um payload JSON estruturado e submetido à API do Claude 3.5 Sonnet.
 
-#### Consequências & Métricas de FinOps
+#### Consequências & Métricas de FinOps (estimativas ilustrativas, não medidas)
 * **Volume Médio Submetido à IA:** Menos de 25 transações por execução diária.
 * **Consumo de Tokens:** ~2.500 tokens de prompt e ~800 tokens de resposta.
 * **Custo por Fechamento Diário:** **< US$ 0,02 (menos de 10 centavos de real)**.
@@ -394,7 +392,7 @@ flowchart TD
 
     subgraph GOLDLAYER["5. Camada Gold (Serving & Consumo Executivo)"]
         DASH_HTML["dashboard_demonstracao.html\n- Filtros Dinâmicos (Banco/Data/Cat)\n- Recálculo Chart.js\n- Tabela Paginada"]
-        NOTIF_FLOW["enviar_email_real.py\n- Disparo TLS SMTP (diaquinotech@gmail.com)\n- Tabela de Alertas Críticos"]
+        NOTIF_FLOW["enviar_email_real.py\n- Disparo TLS SMTP (SMTP_EMAIL do .env)\n- Tabela de Alertas Críticos"]
         POWER_BI["Power BI Executivo / Diretoria\n(Dataset Import via Gateway)"]
     end
 
@@ -417,9 +415,9 @@ flowchart TD
 
 ---
 
-## 6. Tratamento de Armadilhas Específicas do Negócio de Viagens Corporativas
+## 6. Tratamento de Armadilhas Específicas do Negócio de Despesas Corporativas
 
-Um dos maiores diferenciais valorizados por um avaliador de dados experiente é o entendimento profundo das idiossincrasias do domínio de negócio:
+Entender as idiossincrasias do domínio de negócio é essencial para conciliar bem:
 
 ### 6.1. Faturamento Consolidado BSP / IATA (Câmaras de Compensação Aérea)
 * **O Desafio:** A IATA emite uma cobrança bancária consolidada para todas as companhias aéreas associadas (GOL, LATAM, Azul, Tap, Air France) em um único débito quinzenal (ex: R$ 850.000,00). No ERP, existem centenas de requisições de viagem com bilhetes individuais de R$ 1.200,00 a R$ 4.500,00.
@@ -431,7 +429,7 @@ Um dos maiores diferenciais valorizados por um avaliador de dados experiente é 
 * **O Desafio:** Quando um executivo cancela uma reserva de hotel fora do prazo, a rede hoteleira retém o valor da 1ª diária como penalidade contratual (*No-Show fee*) e estorna as diárias remanescentes. O valor estornado no extrato (ex: R$ 1.800,00) não bate com a reserva original do ERP (ex: R$ 2.400,00).
 * **A Solução Técnica:** O motor cognitivo cruza o código da reserva/voucher e, detectando a diferença exata correspondente à tarifa diária, classifica a operação como:
   `STATUS: CONCILIADO_COM_RETENCAO_MULTA`
-  Sugerindo automaticamente o lançamento de apropriação da despesa de cancelamento na conta contábil de despesas administrativas de viagens.
+  Sugerindo automaticamente o lançamento de apropriação da despesa de cancelamento na conta contábil de despesas administrativas.
 
 ### 6.3. Tolerância Paramétrica de Arredondamento Cambial e IOF
 * **O Desafio:** Variações cambiais de fechamento de faturas internacionais (PTAX do dia vs PTAX de liquidação) geram resíduos de R$ 0,01 a R$ 0,05 por lançamento.
@@ -469,14 +467,16 @@ Se a diferença for superior a R$ 0,00, a esteira aborta a publicação e dispar
 
 ### 7.3. Segurança de Credenciais & LGPD / PCI-DSS
 * **Zero Hardcoded Secrets:** Todas as credenciais (senhas de banco, tokens de API do Claude, senhas de app do Gmail para envio de e-mails TLS) são carregadas estritamente de variáveis de ambiente via arquivo `.env`, protegido no `.gitignore`.
-* **Mascaramento de Dados:** Dados sensíveis de cartões corporativos utilizados em viagens são mascarados na camada Silver (`****-****-****-1234`), em total conformidade com a LGPD e o padrão PCI-DSS.
+* **Mascaramento de Dados:** Dados sensíveis de cartões corporativos são mascarados na camada Silver (`****-****-****-1234`), em total conformidade com a LGPD e o padrão PCI-DSS.
 
 ---
 
-## 8. Conclusão: Por que Esta Arquitetura se Destaca
+## 8. Conclusão
 
-Esta solução demonstra que o autor não é apenas um escritor de scripts ou usuário de ferramentas Low-Code, mas um **engenheiro de automação e dados com visão holística de produção**:
-1. **Compreensão de Custos e Trade-offs:** Evitou o erro de colocar clusters de Big Data caros onde SQL Server e Python resolvem em 3 segundos a custo zero.
-2. **Pensamento Defensivo:** Projetou o sistema antecipando quedas de rede (Circuit Breaker), requisições duplicadas (SHA-256 Idempotente) e payloads corrompidos (Dead Letter Queue).
-3. **Fluência em Negócios:** Resolveu as dores reais do CFO e da Controladoria (faturas BSP, no-show, auditoria SOX e partidas dobradas).
-4. **Qualidade de Código & Reprodutibilidade:** Entregou código modular, testado com 100% de sucesso e documentado segundo as melhores práticas mundiais da indústria de engenharia de software e dados.
+Decisões de design que o projeto demonstra:
+1. **Custos e trade-offs:** evitar clusters de Big Data onde SQL e Python resolvem o volume de demonstração.
+2. **Pensamento defensivo:** quedas de rede (Circuit Breaker), requisições duplicadas (SHA-256 idempotente) e payloads corrompidos (validação de schema).
+3. **Domínio financeiro:** faturas consolidadas, no-show, trilha de auditoria e partidas dobradas.
+4. **Qualidade de código:** código modular, com suíte de testes automatizados executada no CI.
+
+> Projeto de portfólio com dados sintéticos; cenários de escala e custos citados neste documento são ilustrativos.

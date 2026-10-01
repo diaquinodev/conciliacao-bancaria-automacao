@@ -3,7 +3,7 @@
 Valida regras de resiliência, Circuit Breaker, Exponential Backoff,
 validação de schemas e integridade dos dados extraídos.
 
-Autor: Diego Luiz Lino de Aquino
+Autor: Diego Aquino
 Data: 2026-09-21
 """
 

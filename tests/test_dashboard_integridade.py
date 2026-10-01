@@ -3,9 +3,9 @@
 SUÍTE DE TESTES UNITÁRIOS & AUDITORIA DE INTEGRIDADE DO DASHBOARD
 Validação de Dados Reais, Filtros Front-End, Paginação e Elementos DOM
 ==============================================================================
-Autor: Diego Luiz Lino de Aquino (diaquinotech@gmail.com)
+Autor: Diego Aquino
 Data: 2026-09-22
-Contexto: case técnico de automação bancária
+Contexto: projeto de portfólio de automação bancária (dados sintéticos)
 """
 
 import os

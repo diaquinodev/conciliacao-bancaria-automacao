@@ -2,7 +2,7 @@
 Criação física de banco relacional local (conciliacao_bancaria.db),
 ingestão de dados das 8 contas e execução de queries analíticas / Stored Procedures.
 
-Autor: Diego Luiz Lino de Aquino (diaquinotech@gmail.com)
+Autor: Diego Aquino
 Data: 2026-09-21
 """
 
@@ -132,7 +132,7 @@ def main():
     discrepancias_count = cursor.fetchone()[0]
     print(f"   [OK] Procedimento concluído: {discrepancias_count} inconsistências marcadas no banco.")
 
-    # 5. Queries Analíticas SQL (O que o entrevistador quer ver)
+    # 5. Queries Analíticas SQL (visões analíticas para o BI)
     print("\n>> [4/4] Executando Queries Analíticas de Consolidação (Views do Power BI):")
     print_linha()
     print(f"{'BANCO':<15} | {'OPERAÇÕES':<10} | {'VOLUME TOTAL (R$)':<20} | {'DISCREPÂNCIAS':<12}")

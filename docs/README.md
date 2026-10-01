@@ -12,7 +12,7 @@ Documentação detalhada de cada camada da esteira. Para visão geral, execuçã
 | 06 | [BI & Logs](06_BI_LOGS.md) | Modelo Power BI, DAX e telemetria estruturada ([`dashboard_spec.json`](dashboard_spec.json)) |
 | 07 | [Harness Final](07_HARNESS_FINAL.md) | Rastreabilidade e validação ponta a ponta ([`LOGS_EXECUCAO.json`](LOGS_EXECUCAO.json)) |
 | 08 | [Power Automate Desktop (RPA)](08_POWER_AUTOMATE_DESKTOP_RPA.md) | Contingência para bancos sem API (OFX / CNAB 240) |
-| 09 | [Alinhamento de Negócio](09_ALINHAMENTO_NEGOCIO.md) | Business case, ROI e premissas financeiras |
+| 09 | [Alinhamento de Negócio](09_ALINHAMENTO_NEGOCIO.md) | Contexto de negócio (qualitativo, sem cálculo de retorno) |
 | 10 | [Engenharia de Dados](10_DOCUMENTACAO_ENGENHARIA_DADOS.md) | Linha de raciocínio e ADRs |
 | — | [Material de Apresentação](MATERIAL_APRESENTACAO.md) | Roteiro de 1 página para o pitch |
 | — | [Case completo](00_CASE_COMPLETO.md) | Documento único com contexto, solução, código e resultados |

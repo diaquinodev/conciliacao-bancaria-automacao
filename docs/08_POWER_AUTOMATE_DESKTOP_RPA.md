@@ -1,9 +1,9 @@
 # Arquitetura de RPA: Power Automate Desktop (PAD)
 ## Extração de Extratos Legados via Internet Banking (OFX / CNAB 240)
 
-**Candidato:** Diego Luiz Lino de Aquino  
+**Autor:** Diego Aquino  
 **Perfil:** Desenvolvedor de Automação  
-**Contexto:** Contingência para Instituições Financeiras ou Portais de Viagens sem API REST
+**Contexto:** Contingência para Instituições Financeiras ou Portais sem API REST
 
 ---
 
@@ -73,7 +73,7 @@
 
 ---
 
-### 4. Como Defender o Domínio de Cloud e Desktop na Entrevista
+### 4. Quando usar Cloud e quando usar Desktop (RPA)
 
 > *"Se o banco disponibiliza API Open Finance ou conector direto, a melhor prática arquitetural é sempre o **Power Automate Cloud** integrado com **Python**, pois garante alta vazão, segurança e menor custo de manutenção.*  
-> *Porém, se a empresa trabalhar com um banco ou portal legado de consolidadora de viagens que só opera via interface web, domino a construção do robô no **Power Automate Desktop**: estruturo a captura segura de credenciais pelo cofre do Windows, utilizo seletores web dinâmicos e disparo o download dos arquivos CNAB/OFX direto para a pasta vigiada da nossa esteira de conciliação."*
+> *Porém, se a empresa trabalhar com um banco ou portal legado de consolidadora que só opera via interface web, domino a construção do robô no **Power Automate Desktop**: estruturo a captura segura de credenciais pelo cofre do Windows, utilizo seletores web dinâmicos e disparo o download dos arquivos CNAB/OFX direto para a pasta vigiada da nossa esteira de conciliação."*

@@ -1,9 +1,9 @@
 """
 ==============================================================================
 ESTEIRA COMPLETA DE CONCILIAÇÃO BANCÁRIA - EXECUÇÃO AO VIVO
-Demonstração hands-on do case técnico de automação bancária
+Demonstração hands-on do projeto de portfólio de automação bancária
 ==============================================================================
-Autor: Diego Luiz Lino de Aquino (diaquinotech@gmail.com)
+Autor: Diego Aquino
 Data: 2026-09-22
 """
 
@@ -30,7 +30,7 @@ load_dotenv()
 
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
-SMTP_EMAIL = os.getenv("SMTP_EMAIL", "diaquinotech@gmail.com")
+SMTP_EMAIL = os.getenv("SMTP_EMAIL", "")  # sem valor padrão: defina no .env
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
 API_CAMBIO_URL = os.getenv("API_CAMBIO_URL", "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL")
 API_BACEN_SELIC_URL = os.getenv("API_BACEN_SELIC_URL", "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados/ultimos/1?formato=json")
@@ -197,8 +197,8 @@ def etapa_5_enviar_email_executivo(total_gasto, categorias, bancos, dados_mercad
     print(" >> [ETAPA 5/5] ENVIANDO RELATÓRIO EXECUTIVO REAL VIA GMAIL SMTP (TLS)")
     print("="*75, flush=True)
 
-    if not SMTP_PASSWORD:
-        print("   [AVISO] SMTP_PASSWORD não configurado. Pulei o envio de e-mail.", flush=True)
+    if not SMTP_PASSWORD or not SMTP_EMAIL:
+        print("   [AVISO] SMTP_EMAIL/SMTP_PASSWORD não configurados. Pulei o envio de e-mail.", flush=True)
         return
 
     linhas_tabela_cat = ""
@@ -236,7 +236,7 @@ def etapa_5_enviar_email_executivo(total_gasto, categorias, bancos, dados_mercad
       <div class="box">
         <div class="header">
           <h2>Relatório Executivo de Conciliação e Decomposição de Despesas</h2>
-          <p>Fechamento Diário de Tesouraria &bull; Viagens Corporativas &bull; {dados_mercado['timestamp']}</p>
+          <p>Fechamento Diário de Tesouraria &bull; Despesas Corporativas &bull; {dados_mercado['timestamp']}</p>
         </div>
         <div class="content">
           <div class="callout">
@@ -297,8 +297,8 @@ def etapa_5_enviar_email_executivo(total_gasto, categorias, bancos, dados_mercad
           </table>
         </div>
         <div class="footer">
-          Candidato: <strong>Diego Luiz Lino de Aquino</strong> &bull; diaquinotech@gmail.com &bull; [removido]<br>
-          Case técnico de automação bancária &bull; 22/09/2026
+          Autor: <strong>Diego Aquino</strong> &bull; Projeto de portfólio<br>
+          Dados sintéticos &bull; automação bancária (Python, SQL, ETL)
         </div>
       </div>
     </body>
@@ -326,7 +326,7 @@ def etapa_5_enviar_email_executivo(total_gasto, categorias, bancos, dados_mercad
 if __name__ == "__main__":
     print("\n" + "#"*75)
     print(" INICIANDO EXECUÇÃO AO VIVO DA ESTEIRA DE CONCILIAÇÃO BANCÁRIA")
-    print(" Autor: Diego Luiz Lino de Aquino")
+    print(" Autor: Diego Aquino")
     print("#"*75)
 
     # 1. Extração e Idempotência

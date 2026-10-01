@@ -1,6 +1,6 @@
 # IMPLEMENTAÇÃO PYTHON: MOTOR DE EXTRAÇÃO BANCÁRIA
 ## Camada de Ingestão de Dados Resiliente & Multbancária
-**Candidato:** Diego Luiz Lino de Aquino  
+**Autor:** Diego Aquino  
 **Agente Responsável:** Agent 3 - Engenheiro Python (Especialista em APIs, ETL e Python em Produção)  
 **Data:** 2026-09-21  
 **Arquivo Executável:** `src/extrator_bancario.py`  
@@ -9,7 +9,7 @@
 
 ### 1. Visão Geral da Camada de Extração
 
-A camada de extração foi construída com foco em **alta disponibilidade**, **idempotência** e **tolerância a falhas transitórias**, atendendo ao cenário de uma empresa de viagens corporativas que opera simultaneamente com 8 contas bancárias comerciais no Brasil.
+A camada de extração foi construída com foco em **alta disponibilidade**, **idempotência** e **tolerância a falhas transitórias**, atendendo ao cenário de uma empresa de despesas corporativas que opera simultaneamente com 8 contas bancárias comerciais no Brasil.
 
 Em operações bancárias corporativas, falhas temporárias de rede (HTTP 429 Too Many Requests, HTTP 500/502/503/504) e janelas de manutenção de bancos são eventos frequentes. Uma extração ingênua que interrompe o processamento na primeira falha paralisa toda a tesouraria. Por essa razão, implementamos os padrões de engenharia **Circuit Breaker** e **Exponential Backoff com Jitter**.
 
@@ -110,4 +110,3 @@ python -m unittest tests/test_extrator_bancario.py -v
 - **Timestamp Fim:** 2026-09-21T16:07:00-03:00
 - **Duração Estimada:** 15 minutos
 - **Linhas de Código Geradas:** 430+ linhas de Python production-ready com type hints e docstrings completas.
-- **Taxa de Cobertura dos Requisitos da Vaga:** 100%

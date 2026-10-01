@@ -1,6 +1,6 @@
 # ARQUITETURA DA SOLUÇÃO
 ## Sistema Integrado de Conciliação Bancária & Análise Inteligente
-**Candidato:** Diego Luiz Lino de Aquino  
+**Autor:** Diego Aquino  
 **Agente Responsável:** Agent 2 - Arquiteto de Sistemas (Especialista em Engenharia de Software e RPA)  
 **Data da Decisão:** 2026-09-21  
 
@@ -16,7 +16,7 @@ flowchart TD
     end
 
     subgraph L2["Layer 2: Transformação (Power Query)"]
-        RAW -->|"Importação de dados"| PQ["Engine Power Query (M)\nLimpeza, Tipagem, Categoria Viagens"]
+        RAW -->|"Importação de dados"| PQ["Engine Power Query (M)\nLimpeza, Tipagem, Categoria de Despesa"]
         PQ -->|"Exportação estruturada"| CLEAN["transacoes_limpas.csv"]
     end
 
@@ -48,8 +48,8 @@ flowchart TD
     end
 
     subgraph L6["Observabilidade & Consumo Executivo"]
-        ACT7 --> PBI["Dashboard Power BI Executivo\n(Acurácia 99.94%, Volume, Prazos)"]
-        PBI --> CFO["Diretoria / CFO / Tesouraria de Viagens"]
+        ACT7 --> PBI["Dashboard Power BI Executivo\n(Acurácia, Volume, Prazos)"]
+        PBI --> CFO["Diretoria / CFO / Tesouraria"]
     end
 
     style L1 fill:#f0f9ff,stroke:#0284c7,stroke-width:2px
@@ -78,7 +78,7 @@ flowchart TD
 - **Componentes:**
   - Script M de ingestão do arquivo unificado gerado pela extração.
   - Pipeline de tipagem rígida, substituição de valores nulos e trim de caracteres espúrios.
-  - Regra de categorização específica para o segmento de viagens corporativas (Passagens, Hospedagens, Transfers, Seguros, Taxas).
+  - Regra de categorização específica para o segmento de despesas corporativas (Passagens, Hospedagens, Transfers, Seguros, Taxas).
   - Deduplicação primária baseada na tupla composta `[ID_Transacao, Banco, Conta, Valor]`.
 - **Tecnologias:** Power Query Engine (Linguagem M), Power BI Desktop / Dataflows.
 - **Padrões de Design:** Pipeline / Filters (cadeia de transformações determinísticas e sequenciais).
@@ -104,7 +104,7 @@ flowchart TD
 
 #### Layer 5: Inteligência & Decisão (Claude API)
 - **Componentes:**
-  - Módulo `AnalisadorIADiscrepancias`: Cliente em Python / Chamada HTTP com prompt contextualizado no negócio de viagens corporativas.
+  - Módulo `AnalisadorIADiscrepancias`: Cliente em Python / Chamada HTTP com prompt contextualizado no negócio de despesas corporativas.
   - Validador de Schema JSON: Garantia estrita de que a resposta da LLM respeite o formato esperado pelo Power Automate.
   - Sistema de Classificação de Risco (Baixo, Médio, Alto) com estimativa quantitativa de confiança (0.0 a 1.0).
   - Repositório de Feedback Loop para persistência e aprendizado de falsos-positivos.
@@ -128,7 +128,7 @@ flowchart TD
 #### Decisão 2: Por que SQL Server Relacional em vez de CosmosDB / NoSQL?
 - **Contexto:** Armazenamento de conciliação bancária que exige integridade contábil e auditoria estrita.
 - **Prós do SQL Server:** Garantia ACID completa, integridade referencial nativa, suporte a Stored Procedures com cálculos estatísticos (STDEV, AVG) e integração perfeita com Power BI via DirectQuery ou Importação.
-- **Contras do SQL Server:** Escalabilidade horizontal menos trivial que NoSQL (irrelevante para o volume de tesouraria de viagens).
+- **Contras do SQL Server:** Escalabilidade horizontal menos trivial que NoSQL (irrelevante para o volume de tesouraria).
 - **Alternativa Considerada:** Azure CosmosDB / MongoDB.
 - **Por que a alternativa foi descartada:** Ausência de integridade relacional nativa para transações bancárias e maior complexidade para consultas contábeis analíticas com joins de auditoria.
 - **Escolha:** SQL Server Relacional.
@@ -137,7 +137,7 @@ flowchart TD
 
 #### Decisão 3: Por que Claude 3.5 Sonnet / Opus para Análise de Discrepâncias em vez de Regras Heurísticas Hard-Coded?
 - **Contexto:** Regras fixas falham em identificar contextos complexos como cobranças de companhias aéreas com pequenas diferenças cambiais ou cancelamentos seguidos de re-emissão de vouchers.
-- **Prós da IA:** Capacidade de ler histórico textual de descrições despadronizadas de 8 bancos, associar com o contexto de viagens e sugerir ações de resolução com alta precisão sem necessidade de centenas de `IFs`.
+- **Prós da IA:** Capacidade de ler histórico textual de descrições despadronizadas de 8 bancos, associar com o contexto de despesas corporativas e sugerir ações de resolução com alta precisão sem necessidade de centenas de `IFs`.
 - **Contras da IA:** Latência de inferência (1 a 3 segundos) e custo por token (mitigado pelo baixo volume de anomalias diárias: 10 a 30 por dia).
 - **Alternativa Considerada:** Sistema puramente baseado em regras heurísticas em SQL/Python.
 - **Por que a alternativa foi descartada:** As regras heurísticas apenas detectam o erro numérico, mas não conseguem explicar a causa-raiz nem sugerir ações inteligentes personalizadas ao analista de tesouraria.
@@ -156,7 +156,7 @@ flowchart TD
 - **Data da Decisão:** 2026-09-21
 
 #### Decisão 5: Por que Power Automate para a Orquestração Geral?
-- **Contexto:** O ambiente corporativo de viagens já utiliza o ecossistema Microsoft 365 (Outlook, Teams, SharePoint e Power BI).
+- **Contexto:** O ambiente corporativo já utiliza o ecossistema Microsoft 365 (Outlook, Teams, SharePoint e Power BI).
 - **Prós do Power Automate:** Conexão nativa com e-mails da diretoria, disparos agendados no fuso horário corporativo, atualização automática de datasets no Power BI Service sem necessidade de scripts externos de autenticação Azure AD.
 - **Contras:** Requer licença Power Automate per user ou per flow.
 - **Alternativa Considerada:** Apache Airflow / Celery puro.

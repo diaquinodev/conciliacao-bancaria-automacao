@@ -1,7 +1,7 @@
 {
   "$schema": "https://powerbi.microsoft.com/schemas/report-layout-spec.json",
   "reportTitle": "DASHBOARD EXECUTIVO: CONCILIAÇÃO BANCÁRIA & FLUXO DE CAIXA",
-  "companyContext": "Viagens Corporativas - Fechamento Diário de Tesouraria",
+  "companyContext": "Despesas Corporativas - Fechamento Diário de Tesouraria",
   "refreshSchedule": "Diário às 07:15 AM (Pós-Orquestração Power Automate)",
   "datasetModel": {
     "architecture": "Star Schema (Modelo Estrela)",
@@ -37,8 +37,8 @@
       "title": "TAXA DE ACURÁCIA OPERACIONAL",
       "daxExpression": "TaxaAcuracia = DIVIDE(CALCULATE(COUNTROWS(FATO_CONCILIACAO_BANCARIA), FATO_CONCILIACAO_BANCARIA[FLAG_DISCREPANCIA] = 0), COUNTROWS(FATO_CONCILIACAO_BANCARIA), 0) * 100",
       "format": "0.00'%'",
-      "targetValue": "99,94%",
-      "trend": "+0.5% de melhoria com IA",
+      "targetValue": "meta ilustrativa",
+      "trend": "n/a (dados sintéticos)",
       "statusColor": "#0078d4"
     },
     {
@@ -46,8 +46,8 @@
       "title": "TEMPO DE FECHAMENTO MATINAL",
       "daxExpression": "TempoFechamentoMinutos = AVERAGE(FATO_AUDITORIA[DURACAO_MINUTOS])",
       "format": "0' min'",
-      "targetValue": "15 min",
-      "trend": "94% de redução (de 4h para 15min)",
+      "targetValue": "meta ilustrativa",
+      "trend": "n/a (dados sintéticos)",
       "statusColor": "#107c41"
     }
   ],
@@ -80,7 +80,7 @@
     {
       "id": "vis_categorias_despesa",
       "type": "DonutChart",
-      "title": "Distribuição de Despesas de Viagens Corporativas",
+      "title": "Distribuição de Despesas de Despesas Corporativas",
       "legend": "DIM_CATEGORIA_DESPESA[CATEGORIA]",
       "values": "[VolumeTotalProcessado]",
       "breakdown": [

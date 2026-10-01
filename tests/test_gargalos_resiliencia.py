@@ -1,7 +1,7 @@
 """
 ==============================================================================
 SUITE DE TESTES FUNCIONAIS: GARGALOS, ARMADILHAS E RESILIÊNCIA
-Esteira de Conciliação Bancária Automatizada - Viagens Corporativas
+Esteira de Conciliação Bancária Automatizada - Despesas Corporativas
 ==============================================================================
 """
 
@@ -38,7 +38,7 @@ from claude_integration import (
 class TestGargalosEArmadilhas(unittest.TestCase):
     """
     Testes funcionais que validam a mitigação de gargalos técnicos
-    e armadilhas operacionais da tesouraria em viagens corporativas.
+    e armadilhas operacionais da tesouraria em despesas corporativas.
     """
 
     def setUp(self):
@@ -160,9 +160,9 @@ class TestGargalosEArmadilhas(unittest.TestCase):
         self.assertEqual(cb.failure_count, 0)
 
     # --------------------------------------------------------------------------
-    # TESTE 3: ARMADILHAS DE VIAGENS CORPORATIVAS & DIAGNÓSTICO COGNITIVO
+    # TESTE 3: ARMADILHAS DE NEGÓCIO (HOTELARIA E AÉREO) & DIAGNÓSTICO COGNITIVO
     # --------------------------------------------------------------------------
-    def test_03_diagnostico_armadilhas_viagens_corporativas(self):
+    def test_03_diagnostico_armadilhas_negocio(self):
         """
         Armadilhas de Negócio:
         1. Faturamento BSP/IATA consolidado de companhias aéreas.

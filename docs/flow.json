@@ -7,11 +7,11 @@
       "type": "Object"
     },
     "SqlServer_ConnectionString": {
-      "defaultValue": "Server=tcp:sql-viagens-corp.database.windows.net,1433;Initial Catalog=CONCILIACAO_BANCARIA;",
+      "defaultValue": "Server=tcp:sql-conciliacao-demo.database.windows.net,1433;Initial Catalog=CONCILIACAO_BANCARIA;",
       "type": "SecureString"
     },
     "CFO_Email": {
-      "defaultValue": "diaquinotech@gmail.com",
+      "defaultValue": "exemplo@exemplo.com.br",
       "type": "String"
     },
     "Claude_Model": {
@@ -59,8 +59,8 @@
       },
       "type": "ExecuteDataflow",
       "inputs": {
-        "dataflowId": "df-conciliacao-viagens-clean-transform",
-        "workspaceId": "ws-viagens-corp-production",
+        "dataflowId": "df-conciliacao-clean-transform",
+        "workspaceId": "ws-conciliacao-demo",
         "notifyOption": "MailOnFailure"
       },
       "retryPolicy": {
@@ -68,7 +68,7 @@
         "count": 2,
         "interval": "PT1M"
       },
-      "description": "Executa o pipeline M do Power Query para deduplicação, tipagem e categorização das despesas de viagem."
+      "description": "Executa o pipeline M do Power Query para deduplicação, tipagem e categorização das despesas."
     },
     "3_Executar_SQL_Validacao": {
       "runAfter": {
@@ -126,7 +126,7 @@
         "body": {
           "model": "@parameters('Claude_Model')",
           "max_tokens": 2048,
-          "system": "Você é o auditor sênior de conformidade financeira de uma empresa de viagens corporativas. Analise as discrepâncias bancárias e responda exclusivamente em JSON estrito.",
+          "system": "Você é o auditor sênior de conformidade financeira de uma empresa de despesas corporativas. Analise as discrepâncias bancárias e responda exclusivamente em JSON estrito.",
           "messages": [
             {
               "role": "user",
@@ -180,7 +180,7 @@
               "operationId": "PostMessageToConversation"
             },
             "parameters": {
-              "groupId": "teams-channel-financeiro-viagens",
+              "groupId": "teams-channel-financeiro",
               "message": "🚨 <b>Atenção Equipe Financeira:</b> Foram detectadas discrepâncias no fechamento bancário de hoje. Alerta executivo enviado à Diretoria."
             }
           }
@@ -207,7 +207,7 @@
           "operationId": "RefreshDataset"
         },
         "parameters": {
-          "groupId": "workspace-viagens-corporativas-id",
+          "groupId": "workspace-conciliacao-id",
           "datasetId": "dataset-conciliacao-bancaria-id"
         }
       },
@@ -229,7 +229,7 @@
           "operationId": "ExportToFileInGroup"
         },
         "parameters": {
-          "groupId": "workspace-viagens-corporativas-id",
+          "groupId": "workspace-conciliacao-id",
           "reportId": "report-conciliacao-executiva-id",
           "format": "PDF"
         }

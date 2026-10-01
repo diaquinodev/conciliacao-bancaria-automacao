@@ -1,6 +1,6 @@
 """DEMONSTRAÇÃO EXECUTIVA END-TO-END: CONCILIAÇÃO BANCÁRIA & AUDITORIA DE FECHAMENTO
 Script de apresentação técnica do case de automação bancária.
-Candidato: Diego Luiz Lino de Aquino (diaquinotech@gmail.com)
+Autor: Diego Aquino
 Data: 2026-09-21 / 2026-09-22
 """
 
@@ -40,7 +40,7 @@ def print_banner(texto: str):
 def main():
     print_banner("SISTEMA INTEGRADO DE CONCILIAÇÃO BANCÁRIA - FECHAMENTO DIÁRIO")
     print(f"Data/Hora do Processamento: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-    print("Empresa: Viagens Corporativas | 8 Contas Comerciais Auditadas")
+    print("Empresa: Despesas Corporativas | 8 Contas Comerciais Auditadas")
     print("Orquestração: Power Automate Flow | Validação: Regras SQL Server & Motor Analítico\n")
 
     # ETAPA 1: EXTRAÇÃO MULTBANCÁRIA
@@ -87,7 +87,7 @@ def main():
             "motivo_detectado_sql": "Valor crítico excedendo o teto de R$ 100.000,00"
         })
 
-    # Duplicata clássica de gateway de viagens
+    # Duplicata clássica de gateway de pagamento
     primeira = df_transacoes.iloc[0]
     anomalias_detectadas.append({
         "id": f"{primeira['id_externo']}_DUP",

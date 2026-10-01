@@ -232,7 +232,7 @@ def compilar_dashboard():
         <span class="brand-mark">CONCILIAÇÃO</span>
         <div class="header-title">
           <h1>Painel de Gestão e Conciliação Financeira</h1>
-          <p>Esteira Automatizada de Tesouraria Multibancária &bull; Viagens Corporativas</p>
+          <p>Esteira Automatizada de Tesouraria Multibancária &bull; Despesas Corporativas</p>
         </div>
       </div>
       <div class="badge-status" id="badge-status">Conciliação em andamento</div>
@@ -380,12 +380,10 @@ def compilar_dashboard():
     <!-- FOOTER EXECUTIVO -->
     <footer class="footer">
       <div>
-        Candidato: <strong>Diego Luiz Lino de Aquino</strong> &bull;
-        <a href="mailto:diaquinotech@gmail.com" style="color: #60a5fa; text-decoration: none;">diaquinotech@gmail.com</a> &bull;
-        [removido]
+        Autor: <strong>Diego Aquino</strong> &bull; Projeto de portfólio
       </div>
       <div>
-        Case técnico de automação bancária &bull; 22/09/2026
+        Dados sintéticos &bull; automação bancária (Python, SQL, ETL)
       </div>
     </footer>
   </div>

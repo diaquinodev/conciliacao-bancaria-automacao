@@ -57,7 +57,7 @@
   "insights": [
     "Python é o critical path da arquitetura devido à heterogeneidade dos 8 bancos comerciais",
     "Power Automate com retry logic exponencial de 3 tentativas garante resiliência e estabilidade",
-    "Integração com Claude API aumenta a confiança e precisão da conciliação em 17%",
+    "Integração com Claude API complementa as regras determinísticas na análise de discrepâncias",
     "Logging estruturado com correlation IDs (UUIDv4) permite auditoria completa SOX-compliant",
     "Dashboard Power BI em modelo estrela fornece visibilidade em tempo real para a Diretoria"
   ],
@@ -68,6 +68,6 @@
     "Simular testes de injeção de falhas (Chaos Engineering) para validar o Circuit Breaker",
     "Medir e comparar a telemetria e o SLA de processamento de cada layer diariamente"
   ],
-  "pronto_para_entrevista": true,
+  "pronto_para_demonstracao": true,
   "material_impresso": "MATERIAL_APRESENTACAO.md (1 página)"
 }

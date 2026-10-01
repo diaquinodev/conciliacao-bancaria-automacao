@@ -4,9 +4,9 @@ Este módulo implementa o motor de extração resiliente para 8 instituições b
 incorporando autenticação OAuth 2.0, padrão Circuit Breaker, retentativas com backoff
 exponencial, validação rígida de schemas e telemetria estruturada em JSON.
 
-Autor: Diego Luiz Lino de Aquino
+Autor: Diego Aquino
 Data: 2026-09-21
-Contexto: case técnico de automação bancária
+Contexto: projeto de portfólio de automação bancária (dados sintéticos)
 """
 
 from __future__ import annotations
@@ -253,12 +253,12 @@ class ExtratorBancario:
         return tokens
 
     def _gerar_transacoes_mock(self, banco: str, dias: int) -> pd.DataFrame:
-        """Gera massa de dados sintética realista para viagens corporativas.
+        """Gera massa de dados sintética realista para despesas corporativas.
 
         Simula transações reais de passagens aéreas, hotéis, transfers e taxas
         com algumas discrepâncias intencionais para teste do motor de IA.
         """
-        categorias_viagem = [
+        categorias_despesa = [
             ("GOL LINHAS AEREAS - Bilhete SP-RJ", "Passagens Aéreas", 850.00, 1800.00),
             ("LATAM AIRLINES - Bilhete GRU-BSB", "Passagens Aéreas", 950.00, 2400.00),
             ("HOTEL COPACABANA PALACE - 3 Diárias", "Hospedagem", 3200.00, 6500.00),
@@ -273,7 +273,7 @@ class ExtratorBancario:
         qtd_registros = random.randint(15, 35)
 
         for _ in range(qtd_registros):
-            desc, cat, min_val, max_val = random.choice(categorias_viagem)
+            desc, cat, min_val, max_val = random.choice(categorias_despesa)
             valor = round(random.uniform(min_val, max_val), 2)
             delta_minutos = random.randint(0, dias * 24 * 60)
             data_tx = (datetime.now() - timedelta(minutes=delta_minutos)).strftime("%Y-%m-%d %H:%M:%S")

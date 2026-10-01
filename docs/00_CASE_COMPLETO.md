@@ -1,5 +1,5 @@
 # 🏦 CASE PRÁTICO: Automação de Conciliação Bancária & Fluxo de Caixa
-## Case técnico de automação bancária | Viagens Corporativas
+## Projeto de portfólio de automação bancária | Despesas Corporativas
 
 ---
 
@@ -23,7 +23,7 @@
 ## 🎯 CONTEXTO & PROBLEMA {#contexto}
 
 ### **Cenário de Negócio:**
-Uma empresa de **viagens corporativas** gerencia múltiplas contas bancárias (8 bancos diferentes) para:
+Uma empresa de **despesas corporativas** gerencia múltiplas contas bancárias (8 bancos diferentes) para:
 - Pagamentos de passagens aéreas
 - Hospedagens
 - Transfers
@@ -37,11 +37,7 @@ Uma empresa de **viagens corporativas** gerencia múltiplas contas bancárias (8
 5. 🔄 **Retrabalho** = Conferências manuais recorrentes
 6. 📄 **Documentação deficiente** = Sem auditoria clara
 
-### **Métrica Atual:**
-- ❌ 4 horas/dia de processamento manual
-- ❌ 2-3 discrepâncias não detectadas por semana
-- ❌ Relatório demora 5 dias para ficar pronto
-- ❌ 0% visibilidade em tempo real
+> Cenário hipotético usado para o projeto de portfólio; os dados são sintéticos e não há medição de um processo real.
 
 ---
 
@@ -56,12 +52,12 @@ Criar um **sistema automático de conciliação bancária** que:
 - ✅ Fornece dashboard em tempo real
 - ✅ Reduz erro humano a 0%
 
-### **Resultado Esperado:**
-- ✅ **15 minutos** vs 4 horas (redução de 94%)
-- ✅ **99.8% de precisão** em detecção de erros
-- ✅ **Alertas em tempo real** para exceções
-- ✅ **Auditoria completa** de todas as transações
-- ✅ **Visibilidade de caixa** 24/7
+### **Resultado Esperado (qualitativo):**
+- ✅ Consolidação diária dos 8 bancos em uma única base
+- ✅ Detecção automática de duplicatas, outliers e lançamentos acima do teto de alçada
+- ✅ Alertas para exceções
+- ✅ Trilha de auditoria das transações
+- ✅ Painel interativo para consulta
 
 ---
 
@@ -630,6 +626,8 @@ EXEC SP_DETECTAR_DISCREPANCIAS @DIAS_ATRAS = 1;
 
 ### **Visualizações Principais**
 
+> Layout ilustrativo (mockup) com valores fictícios.
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │           DASHBOARD: CONCILIAÇÃO BANCÁRIA EXECUTIVO          │
@@ -637,7 +635,7 @@ EXEC SP_DETECTAR_DISCREPANCIAS @DIAS_ATRAS = 1;
 
 ┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────────┐
 │  TOTAL PROCESSADO    │  │  DISCREPÂNCIAS       │  │  TAXA DE ACURÁCIA    │
-│  R$ 4.892.543,20     │  │  3 ALERTAS           │  │  99,94%              │
+│  R$ 4.892.543,20     │  │  3 ALERTAS           │  │  xx,xx%              │
 │  (↑ 12% vs semana)   │  │  (↓ 2 vs dia ant.)   │  │  (↑ 0,5%)            │
 └──────────────────────┘  └──────────────────────┘  └──────────────────────┘
 
@@ -781,36 +779,19 @@ DISCREPÂNCIA 2: Valor crítico > R$ 100k (ID: 120.500, Itaú)
 
 ## 📈 RESULTADOS & IMPACTO {#resultados}
 
-### **Métricas ANTES vs DEPOIS**
+Este é um projeto de portfólio com **dados sintéticos**. Não há afirmação de retorno financeiro, economia ou ganho de tempo medido em operação real.
 
-| Métrica | Antes | Depois | Melhoria |
-|---|---|---|---|
-| **Tempo processamento** | 4 horas/dia | 15 minutos/dia | **94% ↓** |
-| **Taxa de erro** | 2-3 discrepâncias/semana | Detecta 99.8% | **99%+ ↓** |
-| **Visibilidade** | Fim de mês | Tempo real 24/7 | **∞ ↑** |
-| **Custo operacional** | R$ 2.400/mês (manual) | R$ 400/mês (cloud) | **83% ↓** |
-| **Tempo relatório** | 5 dias | 5 minutos | **1.440x ↓** |
-| **Acurácia fluxo caixa** | 85% | 99.8% | **17% ↑** |
-| **Alertas críticos** | 0 (descobertos depois) | Tempo real | **∞ ↑** |
-| **Auditoria** | Manual, incompleta | 100% rastreável | **∞ ↑** |
+**O que é demonstrável no repositório:**
 
-### **ROI (Retorno do Investimento)**
+| Item | Evidência |
+|---|---|
+| Massa de referência | 216 transações sintéticas em 8 bancos (`transacoes_brutas.json`) |
+| Idempotência | Reprocessar o mesmo lote não duplica registros (testes em `tests/`) |
+| Regras de qualidade | Teto de alçada, duplicata potencial e outlier (SQL + testes) |
+| Resiliência | Circuit Breaker e backoff exponencial (testes em `tests/`) |
+| CI | Testes rodando no GitHub Actions (Python 3.12 e 3.13) |
 
-```
-Investimento Inicial:
-  • Desenvolvimento: 200 horas × R$ 300/h = R$ 60.000
-  • Infraestrutura cloud: R$ 15.000/ano
-  • Total: R$ 75.000
-
-Economia Anual:
-  • Tempo (4h/dia × 22 dias × R$ 150/h) = R$ 13.200/mês × 12 = R$ 158.400/ano
-  • Redução erros (R$ 5.000/erro × 50 erros evitados/ano) = R$ 250.000/ano
-  • Melhoria fluxo de caixa (juros economizados) = R$ 100.000/ano
-  • Total: R$ 508.400/ano
-
-ROI = (508.400 - 75.000) / 75.000 = 577%
-PAYBACK = 1,8 meses
-```
+Qualquer estimativa de ganho de eficiência seria apenas uma **estimativa ilustrativa com dados sintéticos** e depende de premissas de um caso real.
 
 ---
 
@@ -837,17 +818,7 @@ PAYBACK = 1,8 meses
 
 ---
 
-## 📞 CONTATO
-
-**Desenvolvidor de Automação**
-Diego Luiz Lino de Aquino
-- 📧 diaquinotech@gmail.com
-- 📱 [removido]
-- 🔗 linkedin.com/in/diegoaquino87
-- 💻 github.com/diaquinodev
-
 ---
 
-**Documento de apresentação do case técnico de automação bancária**
-**Data: 21 de Setembro de 2026**
-**Status: PRONTO PARA APRESENTAÇÃO**
+**Autor:** Diego Aquino · github.com/diaquinodev  
+**Projeto de portfólio com dados sintéticos.**

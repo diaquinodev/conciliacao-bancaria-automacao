@@ -58,7 +58,7 @@
           "nivel_risco": "Baixo",
           "acao_recomendada": "Classificar centro de custo e validar fatura unificada com o fornecedor de hospedagem/transfer.",
           "precedentes_similares": "Variações cambiais em cartões corporativos no exterior ocorrem sazonalmente no fechamento mensal.",
-          "padrao_identificado": "Flutuação associada a fechamentos de faturas de viagens internacionais."
+          "padrao_identificado": "Flutuação associada a fechamentos de faturas internacionais."
         }
       ],
       "resumo_executivo": "Auditoria concluída para 3 discrepâncias. Risco geral moderado com 100% de ações mitigatórias definidas.",

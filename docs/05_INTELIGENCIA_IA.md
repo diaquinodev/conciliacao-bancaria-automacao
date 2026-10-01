@@ -1,6 +1,6 @@
 # INTEGRAÇÃO DE INTELIGÊNCIA ARTIFICIAL: ANÁLISE PREDITIVA COM CLAUDE API
 ## Detecção Semântica de Padrões e Diagnóstico Contábil Automatizado
-**Candidato:** Diego Luiz Lino de Aquino  
+**Autor:** Diego Aquino  
 **Agente Responsável:** Agent 5 - Engenheiro IA (Especialista em Integrações LLM, Prompt Engineering & NLP Financeiro)  
 **Data:** 2026-09-21  
 **Arquivo Executável:** `src/claude_integration.py`  
@@ -12,7 +12,7 @@
 Soluções tradicionais de RPA limitam-se a emitir um alerta genérico quando encontram uma inconsistência (ex: *"Erro na linha 43: duplicata"*). Isso obriga os analistas financeiros a gastarem horas investigando manualmente extratos e ligando para gerentes de conta.
 
 **Nossa abordagem eleva a automação para um patamar cognitivo:**
-Ao identificar uma anomalia numérica no SQL Server, o sistema aciona a **Claude API (Anthropic)** com um prompt financeiro hiper-contextualizado na operação de **viagens corporativas**, que:
+Ao identificar uma anomalia numérica no SQL Server, o sistema aciona a **Claude API (Anthropic)** com um prompt financeiro hiper-contextualizado na operação de **despesas corporativas**, que:
 
 1. **Investiga a Causa-Raiz Técnica/Operacional:** Diferencia um timeout de gateway de pagamento de uma fraude intencional ou cobrança indevida de hotel.
 2. **Avalia o Nível de Risco:** Classifica em `Baixo`, `Médio` ou `Alto`, priorizando a atenção da diretoria.
@@ -26,7 +26,7 @@ Ao identificar uma anomalia numérica no SQL Server, o sistema aciona a **Claude
 
 ```
 [SYSTEM PROMPT]
-Você é um especialista sênior em conformidade financeira, auditoria contábil e conciliação bancária de grandes empresas de viagens corporativas.
+Você é um especialista sênior em conformidade financeira, auditoria contábil e conciliação bancária de grandes empresas de despesas corporativas.
 Sua missão é analisar discrepâncias encontradas na esteira de conciliação bancária entre 8 contas comerciais (BB, Bradesco, Itaú, Santander, Caixa, HSBC, Sicredi, Inter).
 
 Para CADA discrepância fornecida, você deve gerar uma análise crítica e responder ESTRITAMENTE em formato JSON puro, sem blocos markdown, contendo:

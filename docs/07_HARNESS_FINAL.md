@@ -1,6 +1,6 @@
 # HARNESS DE INTEGRAÇÃO FINAL & GOVERNANÇA DA AUTOMAÇÃO
 ## Orquestração dos 6 Agentes Especializados e Validação Ponta a Ponta
-**Candidato:** Diego Luiz Lino de Aquino  
+**Autor:** Diego Aquino  
 **Agente Responsável:** Agent 7 - Orquestrador Principal (Gerenciador de Integração Final & Arquitetura Geral)  
 **Data:** 2026-09-21  
 
@@ -42,11 +42,11 @@ Como Orquestrador Principal do sistema de automação, revisei os outputs e arte
 
 ### 3. Síntese Executiva das 7 Fases da Solução
 
-1. **Fase 1 - Requisitos:** Mapeamento completo dos gaps técnicos do Diego (Power Automate e Power Query) com plano de mitigação fundamentado em seu domínio sênior de Python, SQL e orquestração multi-agente (Projeto ARIA).
+1. **Fase 1 - Requisitos:** levantamento de requisitos técnicos (Power Automate e Power Query) com plano de implementação em Python e SQL.
 2. **Fase 2 - Arquitetura:** Estruturação das 5 camadas, diagramas de fluxo Mermaid/ASCII, 5 decisões arquiteturais críticas fundamentadas e matriz de riscos com Circuit Breaker.
 3. **Fase 3 - Python:** Módulo `extrator_bancario.py` com suporte aos 8 bancos (BB, Bradesco, Itaú, Santander, Caixa, HSBC, Sicredi, Inter), OAuth 2.0, Exponential Backoff, Circuit Breaker e logging JSON.
 4. **Fase 4 - Power Automate:** Arquivo `flow.json` com recorrência diária às 07:00 AM, 9 ações encadeadas, políticas de retry e tratamento de timeouts.
-5. **Fase 5 - Inteligência Artificial:** Módulo `claude_integration.py` com prompt financeiro para viagens corporativas, extração de causa-raiz, ações corretivas, nível de risco e feedback loop.
+5. **Fase 5 - Inteligência Artificial:** Módulo `claude_integration.py` com prompt financeiro para despesas corporativas, extração de causa-raiz, ações corretivas, nível de risco e feedback loop.
 6. **Fase 6 - BI & Observabilidade:** Especificação `dashboard_spec.json` em modelo Star Schema, medidas analíticas em DAX e logs em formato JSON machine-readable.
 7. **Fase 7 - Harness Final:** Documentação integrada pronta para apresentação imediata e guia executivo de 1 página.
 

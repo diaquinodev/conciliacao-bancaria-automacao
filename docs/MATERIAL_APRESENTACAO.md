@@ -1,78 +1,35 @@
-# 🎯 GUIA EXECUTIVO DE ENTREVISTA (1 PÁGINA)
-## Case Técnico: Automação de Conciliação Bancária & IA Cognitiva
-**Candidato:** Diego Luiz Lino de Aquino | **Perfil:** Desenvolvedor de Automação  
-**Cenário:** Viagens Corporativas (8 Contas Bancárias) | **Data da Entrevista:** 22/09/2026, 14h-17h (SP)  
+# Resumo técnico do projeto (1 página)
 
----
+Projeto de portfólio de automação de conciliação bancária. **Todos os dados são sintéticos.**
 
-### 1. O Problema de Negócio vs A Solução Arquitetada
+## Problema (cenário hipotético)
 
-| O Cenário Manual Anterior | A Solução Automática Implementada |
-| :--- | :--- |
-| ⏰ **4 horas diárias** gastas em conferência manual de extratos | ⚡ **15 minutos diários** (Redução de **94%** no tempo de ciclo) |
-| 😰 **2 a 3 erros/semana** detectados apenas no fim do mês | 🛡️ **99,94% de acurácia** com detecção em tempo real e IA |
-| 📊 Relatório demorava **5 dias** para ser consolidado | 📈 Dashboard executivo no **Power BI atualizado em 5 min** |
-| 💸 Risco de caixa, juros desnecessários e retrabalho | 💰 **ROI de 577%** com payback estimado em **1,8 meses** |
+Consolidar extratos de 8 bancos em uma única base, sem duplicar lançamentos quando uma carga é reexecutada, e sinalizar exceções (duplicatas, outliers, lançamentos acima de um teto de alçada).
 
----
-
-### 2. Diagrama Arquitetural da Solução
+## Arquitetura
 
 ```
-┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│   8 APIs BANCOS │ ----> │  PYTHON ENGINE  │ ----> │   POWER QUERY   │
-│   (OAuth 2.0)   │       │(Circuit Breaker)│       │ (M Language ETL)│
-└─────────────────┘       └─────────────────┘       └─────────────────┘
-                                                             │
-┌─────────────────┐       ┌─────────────────┐                ▼
-│    POWER BI     │ <---- │ POWER AUTOMATE  │ <---- ┌─────────────────┐
-│(Dashboard Real) │       │(Orquestrador)   │       │   SQL SERVER    │
-└─────────────────┘       └────────┬────────┘       │ (Stored Procs)  │
-                                   │                └─────────────────┘
-                                   ▼
-                          ┌─────────────────┐
-                          │ CLAUDE API (IA) │
-                          │(Diagnóstico/Ação)
-                          └─────────────────┘
+ 8 APIs bancárias --> Extrator Python --> Power Query (M) --> SQL (T-SQL / SQLite na demo)
+ (OAuth 2.0, demo)   (Circuit Breaker)     (ETL)               |
+                                                               +--> Painel HTML (Chart.js)
+                                                               +--> Análise de discrepâncias (Claude API ou heurística)
+                                                               +--> Relatório por e-mail (SMTP opcional)
 ```
 
----
+## Pontos técnicos
 
-### 3. O Diferencial Competitivo Único: Inteligência Artificial Cognitiva
+- **Resiliência:** Circuit Breaker (CLOSED → OPEN → HALF_OPEN) e backoff exponencial com jitter para HTTP 429/5xx (`src/extrator_bancario.py`).
+- **Idempotência:** chave SHA-256 por `banco | conta | data | valor | descrição normalizada`; reprocessar o lote não duplica registros.
+- **Qualidade de dados:** validação de schema, taxa de erro do lote, regras de teto de alçada, duplicata potencial e outlier (média + 2σ).
+- **Camada de IA (opcional):** só as discrepâncias são enviadas à API; sem chave, usa motor heurístico determinístico.
+- **Testes:** 4 suítes automatizadas executadas no GitHub Actions (Python 3.12 e 3.13).
 
-Enquanto sistemas tradicionais apenas marcam uma transação como "duplicata" ou "erro", **nosso módulo de IA investiga semanticamente a causa-raiz e prescreve a solução:**
-- **Diagnóstico Operacional:** Distingue falha de timeout de gateway de fraude ou cobrança incorreta de hotel.
-- **Nível de Risco & Confiança:** Avalia o risco (Baixo, Médio, Alto) com score numérico de certeza ($\ge 95\%$).
-- **Ação Recomendada Imediata:** Indica a resolução exata para a tesouraria (ex: *"Estornar lançamento X e solicitar nota Y"*).
+## Como demonstrar
 
----
+1. `python src/demo_executiva.py` — extração, regras e diagnóstico no terminal.
+2. `python src/executar_esteira_ao_vivo.py` — SQLite idempotente, câmbio/Selic ao vivo e painel (e-mail só se `SMTP_EMAIL` e `SMTP_PASSWORD` estiverem no `.env`).
+3. Abrir `dashboard_demonstracao.html` e testar os filtros.
 
-### 4. Como Responder aos Gaps com Segurança (Script de 30 Segundos)
+## Limitações
 
-> *"Meu background é em engenharia de automação em escala real com Python, SQL e orquestração de sistemas multi-agente complexos (como o projeto ARIA, que gerenciava mais de 190 SKUs). Ferramentas como Power Automate e Power Query são interfaces declarativas que operam sobre os mesmos fundamentos lógicos que já domino profundamente:*
-> - *SQL + Pandas = Power Query*
-> - *Python + Webhooks/APIs = Power Automate*
-> *Em vez de apenas estudar a teoria, montei para esta entrevista a solução completa funcionando de ponta a ponta com fluxo importável, scripts resilientes e integração de IA."*
-
-### 5. Roteiro Sugerido de Apresentação (10 a 12 Minutos)
-
-1. ⏱️ **00-02 min:** Contexto do setor de viagens corporativas (8 bancos, despesas fragmentadas de bilhetes e hotéis).
-2. ⏱️ **02-05 min:** Demonstração dos artefatos (`extrator_bancario.py` com Circuit Breaker e `flow.json` do Power Automate).
-3. ⏱️ **05-08 min:** Demonstração da IA com Claude API analisando causas-raiz e mitigando retrabalho da tesouraria.
-4. ⏱️ **08-10 min:** Apresentação do ROI de 577% (economia de R$ 508.400/ano) e dashboard executivo Power BI.
-5. ⏱️ **10-12 min:** Perguntas técnicas e alinhamento dos próximos passos.
-
----
-
-### 6. Domínio de Gargalos Técnicos & Armadilhas Operacionais (Skill Ativa)
-
-Durante a entrevista, mostre maturidade demonstrando como a arquitetura antecipa problemas reais:
-- **Resiliência a Rate Limit (HTTP 429):** Bancos corporativos limitam chamadas por segundo. Implementado *Circuit Breaker* com *Exponential Backoff* e recuperação automática em *Half-Open*.
-- **Idempotência no Power Automate / SQL:** Re-execuções de fluxos após falhas de rede nunca duplicam saldos graças ao cálculo de `hash_transacao` SHA-256 e `MERGE`/`INSERT OR IGNORE`.
-- **Armadilhas de Viagens Corporativas:**
-  - *Faturamento Consolidado BSP/IATA:* Comparação de faturas quinzenais agregadas contra e-tickets individuais.
-  - *No-Show e Cancelamento de Hotéis:* Reconhecimento de retenção de 1ª diária como divergência aceitável sem falso alerta de fraude.
-- **Validação Automatizada:** Bateria de testes funcionais disponível em `tests/test_gargalos_resiliencia.py`.
-
----
-**Diego Luiz Lino de Aquino** | 📧 diaquinotech@gmail.com | 📱 [removido] | 🔗 linkedin.com/in/diegoaquino87
+Dados sintéticos, sem integração real com bancos; SQLite na demo e T-SQL como modelo alvo; extração sequencial. Não há afirmação de retorno financeiro ou ganho medido em operação real.

@@ -1,12 +1,12 @@
 """Módulo de Integração com Claude API para Análise Inteligente de Discrepâncias.
 
-Este módulo consome a API da Anthropic para analisar anomalias financeiras em viagens
+Este módulo consome a API da Anthropic para analisar anomalias financeiras em despesas
 corporativas, classificando nível de risco, sugerindo ações corretivas imediatas,
 identificando precedentes históricos e detectando padrões operacionais recorrentes.
 
-Autor: Diego Luiz Lino de Aquino
+Autor: Diego Aquino
 Data: 2026-09-21
-Contexto: case técnico de automação bancária
+Contexto: projeto de portfólio de automação bancária (dados sintéticos)
 """
 
 from __future__ import annotations
@@ -82,7 +82,7 @@ class AnalisadorIADiscrepancias:
 
     TETO_ALCADA = 100000.00  # Mesma regra da SP_DETECTAR_DISCREPANCIAS
 
-    SYSTEM_PROMPT = """Você é um especialista sênior em conformidade financeira, auditoria contábil e conciliação bancária de grandes empresas de viagens corporativas.
+    SYSTEM_PROMPT = """Você é um especialista sênior em conformidade financeira, auditoria contábil e conciliação bancária de grandes empresas de despesas corporativas.
 Sua missão é analisar discrepâncias encontradas na esteira de conciliação bancária entre 8 contas comerciais (BB, Bradesco, Itaú, Santander, Caixa, HSBC, Sicredi, Inter).
 
 Para CADA discrepância fornecida, você deve gerar uma análise crítica e responder ESTRITAMENTE em formato JSON puro, sem blocos markdown (sem ```json), contendo:
@@ -137,7 +137,7 @@ Responda no formato:
             self.logger.log("INFO", "init", "Chave ANTHROPIC_API_KEY não informada. Utilizando motor de inferência local (Demo Mode).")
 
     def _gerar_analise_mock(self, discrepancias: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Gera análises inteligentes baseadas em regras de heurística e histórico de viagens corporativas."""
+        """Gera análises inteligentes baseadas em regras de heurística e histórico de despesas corporativas."""
         analises = []
 
         for item in discrepancias:
@@ -172,7 +172,7 @@ Responda no formato:
                 risco = "Baixo"
                 acao = "Classificar centro de custo e validar fatura unificada com o fornecedor de hospedagem/transfer."
                 precedente = "Variações cambiais em cartões corporativos no exterior ocorrem sazonalmente no fechamento mensal."
-                padrao = "Flutuação associada a fechamentos de faturas de viagens internacionais."
+                padrao = "Flutuação associada a fechamentos de faturas de operações internacionais."
                 confianca = 0.89
 
             analises.append({

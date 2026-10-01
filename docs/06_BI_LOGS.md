@@ -1,6 +1,6 @@
 # BUSINESS INTELLIGENCE & OBSERVABILIDADE ENTERPRISE
 ## Painel Executivo Power BI, Modelagem DAX & Telemetria Estruturada
-**Candidato:** Diego Luiz Lino de Aquino  
+**Autor:** Diego Aquino  
 **Agente Responsável:** Agent 6 - Engenheiro BI & Observabilidade (Especialista em Power BI, Logging & Telemetria)  
 **Data:** 2026-09-21  
 **Arquivo de Especificação:** `docs/dashboard_spec.json`  
@@ -9,16 +9,18 @@
 
 ### 1. Visão Executiva do Dashboard
 
-O Dashboard de Conciliação Bancária foi concebido para atender tanto às necessidades da **Diretoria Financeira (CFO / Controladoria)** quanto às operações diárias da **Tesouraria de Viagens Corporativas**. 
+> Layout ilustrativo (mockup) com valores fictícios.
 
-Ele transforma o processo antes opaco e reativo de conciliação manual (que demorava 4 horas por dia e gerava relatórios defasados em 5 dias) em uma experiência de **visibilidade em tempo real com auditoria contínua**.
+O Dashboard de Conciliação Bancária foi concebido para atender tanto às necessidades da **Diretoria Financeira (CFO / Controladoria)** quanto às operações diárias da **Tesouraria de Despesas Corporativas**. 
+
+Ele transforma o processo antes opaco e reativo de conciliação manual em uma experiência de **visibilidade em tempo real com auditoria contínua**.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                 DASHBOARD EXECUTIVO: CONCILIAÇÃO BANCÁRIA                   │
 ├──────────────────────┬──────────────────────┬───────────────────────────────┤
 │   TOTAL PROCESSADO   │   DISCREPÂNCIAS      │      TAXA DE ACURÁCIA         │
-│   R$ 4.892.543,20    │   3 ALERTAS          │      99,94%                   │
+│   R$ 4.892.543,20    │   3 ALERTAS          │      xx,xx% (ilustrativo)    │
 │   (↑ 12% vs semana)  │   (↓ 2 vs dia ant.)  │      (↑ 0,5% pós-IA)          │
 ├──────────────────────┴──────────────────────┴───────────────────────────────┤
 │ VOLUME POR BANCO (8 Contas)                                                 │
@@ -31,7 +33,7 @@ Ele transforma o processo antes opaco e reativo de conciliação manual (que dem
 │ Sicredi            ███░░░░░░░░░░░░░░░░░░░░░░░░░░  R$   180.000,00  (3.7%)   │
 │ Banco Inter        ██░░░░░░░░░░░░░░░░░░░░░░░░░░░  R$   120.000,00  (2.5%)   │
 ├─────────────────────────────────────────────┬───────────────────────────────┤
-│ EVOLUÇÃO TEMPORAL (30 DIAS)                 │ CATEGORIAS DE DESPESA VIAGENS │
+│ EVOLUÇÃO TEMPORAL (30 DIAS)                 │ CATEGORIAS DE DESPESA         │
 │  R$ 5M ───/\───/\───────────────            │ 1. Passagens Aéreas: 42%      │
 │  R$ 3M    /  \/  \                          │ 2. Hospedagem: 31%            │
 │  R$ 1M ──/────────\─────────────            │ 3. Transfers e Locação: 18%   │

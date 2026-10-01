@@ -1,9 +1,9 @@
 """
 ==============================================================================
 EXTRAÇÃO DE API PÚBLICA FINANCEIRA & ENVIO REAL DE NOTIFICAÇÃO EXECUTIVA
-Esteira de Conciliação Bancária - Viagens Corporativas
+Esteira de Conciliação Bancária - Despesas Corporativas
 ==============================================================================
-Autor: Diego Luiz Lino de Aquino (diaquinotech@gmail.com)
+Autor: Diego Aquino
 Data: 2026-09-21
 """
 
@@ -28,7 +28,7 @@ load_dotenv()
 
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
-SMTP_EMAIL = os.getenv("SMTP_EMAIL", "diaquinotech@gmail.com")
+SMTP_EMAIL = os.getenv("SMTP_EMAIL", "")  # sem valor padrão: defina no .env
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
 API_CAMBIO_URL = os.getenv("API_CAMBIO_URL", "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL")
 API_BACEN_SELIC_URL = os.getenv("API_BACEN_SELIC_URL", "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados/ultimos/1?formato=json")
@@ -171,7 +171,7 @@ def gerar_relatorio_html(dados_mercado, resumo_bancos):
       <div class="container">
         <div class="header">
           <h1>Relatório Executivo de Conciliação Bancária</h1>
-          <p>Fechamento Diário Automatizado | Viagens Corporativas &bull; {dados_mercado['data_consulta']}</p>
+          <p>Fechamento Diário Automatizado | Despesas Corporativas &bull; {dados_mercado['data_consulta']}</p>
         </div>
         
         <div class="content">
@@ -237,8 +237,8 @@ def gerar_relatorio_html(dados_mercado, resumo_bancos):
         </div>
 
         <div class="footer">
-          Candidato: <strong>Diego Luiz Lino de Aquino</strong> &bull; <a href="mailto:diaquinotech@gmail.com" style="color: #bd1023; text-decoration: none;">diaquinotech@gmail.com</a><br>
-          Case técnico de automação bancária &bull; 22/09/2026
+          Autor: <strong>Diego Aquino</strong> &bull; Projeto de portfólio<br>
+          Dados sintéticos &bull; automação bancária (Python, SQL, ETL)
         </div>
       </div>
     </body>
@@ -251,13 +251,13 @@ def enviar_email(dados_mercado):
     """Realiza o disparo real via servidor SMTP do Gmail."""
     print("\n>> [ETAPA 2/3] Preparando Mensagem e Conexão SMTP com o Gmail...")
 
-    if not SMTP_PASSWORD:
-        print("   [ERRO] Senha de app SMTP_PASSWORD não configurada no .env!")
+    if not SMTP_PASSWORD or not SMTP_EMAIL:
+        print("   [ERRO] SMTP_EMAIL e/ou SMTP_PASSWORD não configurados no .env!")
         return False
 
     remetente = SMTP_EMAIL
     destinatario = SMTP_EMAIL
-    assunto = f"Fechamento de Conciliação Bancária - Viagens Corporativas ({datetime.now().strftime('%d/%m/%Y')})"
+    assunto = f"Fechamento de Conciliação Bancária - Despesas Corporativas ({datetime.now().strftime('%d/%m/%Y')})"
 
     msg = MIMEMultipart("alternative")
     msg["Subject"] = assunto
