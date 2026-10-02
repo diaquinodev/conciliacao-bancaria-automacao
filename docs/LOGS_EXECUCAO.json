@@ -58,7 +58,7 @@
     "Python é o critical path da arquitetura devido à heterogeneidade dos 8 bancos comerciais",
     "Power Automate com retry logic exponencial de 3 tentativas garante resiliência e estabilidade",
     "Integração com Claude API complementa as regras determinísticas na análise de discrepâncias",
-    "Logging estruturado com correlation IDs (UUIDv4) permite auditoria completa SOX-compliant",
+    "Logging estruturado com correlation IDs (UUIDv4) facilita a rastreabilidade (audit trail) da execução",
     "Dashboard Power BI em modelo estrela fornece visibilidade em tempo real para a Diretoria"
   ],
   "recomendacoes": [

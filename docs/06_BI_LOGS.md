@@ -102,7 +102,7 @@ O modelo de dados implementa a arquitetura **Star Schema**, garantindo máxima p
 
 ### 3. Padrão de Observabilidade & Schema JSON de Telemetria
 
-Para assegurar conformidade com as diretrizes de governança de TI e SOX (Sarbanes-Oxley), todas as etapas da automação emitem eventos de log estruturados em formato JSON machine-readable com **Correlation IDs (UUIDv4)**.
+Para apoiar rastreabilidade e trilha de auditoria (audit trail), todas as etapas da automação emitem eventos de log estruturados em formato JSON machine-readable com **Correlation IDs (UUIDv4)**.
 
 #### Schema do Evento de Log (`Azure_Log_Analytics_Orchestration`):
 ```json

@@ -8,7 +8,7 @@
 * **Perfil:** Analista de Dados (automação, ETL e qualidade de dados)
 * **Domínio de Aplicação:** Tesouraria Corporativa, Finanças e Despesas Corporativas
 * **Status da Solução:** Projeto de portfólio com dados sintéticos; suíte de testes automatizados no CI (integridade de dados e resiliência a falhas)
-* **Padrões de Engenharia Adotados:** C4 Model, Architecture Decision Records (ADRs - Martin Fowler / Michael Nygard), Medallion Architecture (Bronze/Silver/Gold), Data Contracts, SOX 404 (Trilha de Auditoria WORM) e FinOps.
+* **Padrões de Engenharia Adotados:** C4 Model, Architecture Decision Records (ADRs - Martin Fowler / Michael Nygard), Medallion Architecture (Bronze/Silver/Gold), Data Contracts, Trilha de Auditoria (audit trail, modelo append-only) e FinOps.
 
 ---
 
@@ -62,7 +62,7 @@ py -3.13 tests/test_gargalos_resiliencia.py
 ### Passo 4: Visualizar o Dashboard e a Apresentação Executiva
 Abra diretamente no navegador:
 * `dashboard_demonstracao.html`: Dashboard financeiro interativo com filtros dinâmicos por banco, categoria, datas e busca textual.
-* `fluxograma_apresentacao.html`: Apresentação interativa em slides demonstrando as 5 fases da arquitetura e conformidade SOX.
+* `fluxograma_apresentacao.html`: Apresentação interativa em slides demonstrando as 5 fases da arquitetura e trilha de auditoria.
 
 ---
 
@@ -382,7 +382,7 @@ flowchart TD
         M_ENGINE["etl_power_query.m\n- Table.Buffer em RAM\n- Normalização Fuso Horário\n- Deduplicação"]
         SQL_MERGE["SQL Server / SQLite\n- Cálculo Hash SHA-256\n- MERGE Atômico\n- Armadilha BSP / No-Show\n- Tolerância R$ 0,05"]
         DLQ["TB_DEAD_LETTER_QUEUE\n(Quarentena de Payload Inválido)"]
-        AUDIT_LEDGER["TB_AUDITORIA_CONCILIACAO\n(Ledger WORM Append-Only)"]
+        AUDIT_LEDGER["TB_AUDITORIA_CONCILIACAO\n(Trilha de auditoria append-only)"]
     end
 
     subgraph COGNITIVELAYER["4. Auditoria Cognitiva por Exceção"]
@@ -439,10 +439,10 @@ Entender as idiossincrasias do domínio de negócio é essencial para conciliar 
 
 ---
 
-## 7. Governança, Segurança e Auditoria SOX (Sarbanes-Oxley 404)
+## 7. Governança, Segurança e Trilha de Auditoria
 
-### 7.1. Trilha de Auditoria Imutável (WORM Ledger)
-Qualquer alteração em registros de conciliação gera um evento imutável na tabela `TB_AUDITORIA_CONCILIACAO`:
+### 7.1. Trilha de Auditoria (modelo append-only, desenho)
+No desenho proposto, qualquer alteração em registros de conciliação gera um evento de auditoria (append-only) na tabela `TB_AUDITORIA_CONCILIACAO`:
 
 ```sql
 CREATE TABLE dbo.TB_AUDITORIA_CONCILIACAO (
@@ -458,7 +458,7 @@ CREATE TABLE dbo.TB_AUDITORIA_CONCILIACAO (
     timestamp_utc       DATETIME2(3)         NOT NULL DEFAULT (SYSUTCDATETIME())
 );
 ```
-Auditores externos têm acesso apenas de leitura (`db_datareader`) a esta tabela, garantindo rastreabilidade histórica completa exigida pela seção 404 da Lei SOX.
+Auditores externos têm acesso apenas de leitura (`db_datareader`) a esta tabela, apoiando a rastreabilidade histórica. Trata-se de um desenho de referência em projeto de portfólio, sem certificação ou afirmação de conformidade regulatória.
 
 ### 7.2. Validação da Invariante Contábil de Partidas Dobradas
 Antes de liberar a publicação de dados no dashboard ou disparar notificações de fechamento, a esteira executa uma asserção matemática estrita:

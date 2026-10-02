@@ -5,7 +5,7 @@ Descreva de forma clara e concisa o que este Pull Request introduz (correção d
 - [ ] 🐛 Correção de bug (bugfix sem quebra de compatibilidade)
 - [ ] ✨ Nova funcionalidade (feature sem quebra de contrato de dados)
 - [ ] ⚡ Otimização de performance / query SQL / Power Query
-- [ ] 🛡️ Reforço de segurança / SOX / LGPD
+- [ ] 🛡️ Reforço de segurança / auditoria / LGPD
 - [ ] 📝 Documentação técnica / ADR
 
 ## 🧪 Checklist de Qualidade & Testes

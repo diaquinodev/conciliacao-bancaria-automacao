@@ -10,7 +10,7 @@
 
 **Autor:** Diego Aquino · [LinkedIn](https://linkedin.com/in/diegoaquino87) · [GitHub](https://github.com/diaquinodev)
 
-> **Sobre este projeto:** é um **projeto de portfólio**. Todos os dados são **sintéticos** (gerados pelo próprio código) e não há integração real com bancos. O cenário descrito abaixo é hipotético, e o projeto **não promete nem afirma resultado financeiro** (retorno, economia ou ganho de tempo medido em operação real).
+> **Sobre este projeto:** é um **projeto de portfólio**, com **dados sintéticos** (gerados pelo próprio código) e **sem bancos reais**: não há integração com nenhuma instituição financeira, credencial ou dado de cliente. Os nomes de bancos são apenas ilustrativos. O cenário descrito abaixo é hipotético, e o projeto **não promete nem afirma resultado financeiro** (retorno, economia ou ganho de tempo medido em operação real).
 
 **Stack:** Python (pandas, requests) · SQL (T-SQL como modelo; SQLite na demonstração) · ETL (Power Query / M) · painel HTML (Chart.js) · GitHub Actions (CI)
 

@@ -12,10 +12,10 @@
 let
     // --------------------------------------------------------------------------
     // 0. PARÂMETRO DE ORIGEM
-    // Ajuste para o caminho da pasta do projeto (ou transforme em Parâmetro do
+    // Caminho relativo (genérico) ao arquivo sintético do repositório; ajuste para o caminho da pasta do projeto (ou transforme em Parâmetro do
     // Power BI: Página Inicial > Gerenciar Parâmetros > "CaminhoTransacoes").
     // --------------------------------------------------------------------------
-    CaminhoTransacoes = "C:\case-tecnico\transacoes_brutas.json",
+    CaminhoTransacoes = "transacoes_brutas.json",
 
     // --------------------------------------------------------------------------
     // 1. EXTRAÇÃO E CARGA DE DADOS
